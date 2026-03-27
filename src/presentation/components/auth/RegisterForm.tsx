@@ -1,49 +1,152 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from 'next/link';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { User, Mail, Lock, CheckCircle, Loader2 } from "lucide-react";
+import Image from 'next/image';
+
+// Esquema de validación con Zod
+// Esquema de validación con Zod corregido
+const registerSchema = z.object({
+  name: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
+  email: z.string().email("Correo inválido").endsWith("@espe.edu.ec", "Usa tu correo @espe.edu.ec"),
+  password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Las contraseñas no coinciden",
+  path: ["confirmPassword"],
+});
+
+type RegisterFormData = z.infer<typeof registerSchema>;
 
 export const RegisterForm = () => {
-  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
-  const [msg, setMsg] = useState("");
+  const [serverError, setServerError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      body: JSON.stringify({ ...formData, role: "PACIENTE" }),
-    });
-    const data = await res.json();
-    setMsg(data.error || data.message);
+  const { register, handleSubmit, formState: { errors } } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
+  });
+
+  const onSubmit = async (data: RegisterFormData) => {
+    setLoading(true);
+    setServerError("");
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (res.ok) router.push("/login");
+      else {
+        const result = await res.json();
+        setServerError(result.error || "Error al registrarse");
+      }
+    } catch (err) {
+      setServerError("Error de conexión");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="bg-white/90 backdrop-blur-md p-10 rounded-3xl shadow-xl border border-blue-50 w-full max-w-md">
-      <h2 className="text-3xl font-bold text-slate-700 mb-2 text-center">Únete a SGA-ESPE</h2>
-      <p className="text-slate-500 text-center mb-8">Crea tu cuenta institucional</p>
-      
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <input 
-          type="text" placeholder="Nombre completo"
-          className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-          onChange={(e) => setFormData({...formData, name: e.target.value})}
-          required
-        />
-        <input 
-          type="email" placeholder="usuario@espe.edu.ec"
-          className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-          onChange={(e) => setFormData({...formData, email: e.target.value})}
-          required
-        />
-        <input 
-          type="password" placeholder="Contraseña segura"
-          className="w-full p-4 rounded-2xl bg-slate-50 border border-slate-100 focus:ring-2 focus:ring-blue-200 outline-none transition-all"
-          onChange={(e) => setFormData({...formData, password: e.target.value})}
-          required
-        />
-        <button className="w-full bg-emerald-400 hover:bg-emerald-500 text-white py-4 rounded-2xl font-bold shadow-lg shadow-emerald-100 transition-transform active:scale-95">
-          Crear mi cuenta
-        </button>
-      </form>
-      {msg && <p className="mt-4 text-center text-sm font-medium text-blue-600 animate-pulse">{msg}</p>}
+    <div className="flex min-h-screen items-center justify-center bg-white p-6">
+      {/* Contenedor Principal Centrado */}
+      <div className="flex w-full max-w-5xl flex-col md:flex-row items-center justify-center gap-16">
+        
+        {/* Columna Izquierda: Ilustración (Solo visible en desktop) */}
+        
+
+        {/* Columna Derecha: Formulario Estilo Mockup */}
+        <div className="w-full max-w-[600px] bg-[#D9E9FF] p-10 rounded-[45px] shadow-xl flex flex-col items-center border border-white/50">
+          
+          <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-md border border-blue-200">
+                      <Image
+                        src="/images/logo-.png"
+                        alt="Logo"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+          
+          <h1 className="text-2xl font-bold text-[#1E4D8C] mb-8 tracking-widest uppercase">Registro</h1>
+          
+          <form className="w-full space-y-5" onSubmit={handleSubmit(onSubmit)}>
+            
+            {/* Nombres Completos */}
+            <div className="relative">
+              <User className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
+              <input 
+                {...register("name")}
+                type="text" 
+                placeholder="Nombres Completos"
+                className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.name ? 'ring-2 ring-red-300' : ''}`}
+              />
+              {errors.name && <p className="text-[10px] text-[#1E4D8C] mt-1 ml-2 font-bold uppercase italic">{errors.name.message}</p>}
+            </div>
+
+            {/* Email */}
+            <div className="relative">
+              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
+              <input 
+                {...register("email")}
+                type="email" 
+                placeholder="Email (@espe.edu.ec)"
+                className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.email ? 'ring-2 ring-red-300' : ''}`}
+              />
+              {errors.email && <p className="text-[10px] text-[#1E4D8C] mt-1 ml-2 font-bold uppercase italic">{errors.email.message}</p>}
+            </div>
+            
+            {/* Contraseña */}
+            <div className="relative">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
+              <input 
+                {...register("password")}
+                type="password" 
+                placeholder="Contraseña"
+                className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.password ? 'ring-2 ring-red-300' : ''}`}
+              />
+              {errors.password && <p className="text-[10px] text-[#1E4D8C] mt-1 ml-2 font-bold uppercase italic">{errors.password.message}</p>}
+            </div>
+
+            {/* Confirmar Contraseña */}
+            <div className="relative">
+              <CheckCircle className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
+              <input 
+                {...register("confirmPassword")}
+                type="password" 
+                placeholder="Confirmar Contraseña"
+                className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.confirmPassword ? 'ring-2 ring-red-300' : ''}`}
+              />
+              {errors.confirmPassword && <p className="text-[10px] text-[#1E4D8C] mt-1 ml-2 font-bold uppercase italic">{errors.confirmPassword.message}</p>}
+            </div>
+
+            {serverError && <p className="text-[10px] text-[#1E4D8C] mt-1 ml-2 font-bold uppercase italic">{serverError}</p>}
+
+            <button 
+              type="submit"
+              disabled={loading}
+              className="w-full bg-[#71A5D9] hover:bg-[#1E4D8C] text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-2"
+            >
+              {loading ? <Loader2 className="animate-spin" /> : "Registrar Usuario"}
+            </button>
+            
+            <div className="text-center mt-6">
+              <p className="text-xs text-[#1E4D8C]/70 italic font-medium">
+                ¿Ya tienes una cuenta?  
+                <Link href="/login" className="text-[#1E4D8C] font-bold ml-1 hover:underline">
+                  Inicia Sesión
+                </Link>
+              </p>
+            </div>
+          </form>
+        </div>
+
+      </div>
     </div>
   );
 };
