@@ -1,8 +1,20 @@
+"use client";
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from "next/navigation";
 import { LogOut, UserRound, Users, GraduationCap, CalendarCheck } from "lucide-react";
 
 export function AdminNavbar() {
+  const pathname = usePathname();
+
+  const navLinks = [
+    { name: "Inicio", href: "/dashboard/admin" },
+    { name: "Psicólogos", href: "/dashboard/admin/psicologos" },
+    { name: "Pacientes", href: "/dashboard/admin/pacientes" },
+    { name: "Actividades", href: "/dashboard/admin/actividades" },
+    { name: "Reportes", href: "/dashboard/admin/reportes" },
+  ];
+
   return (
     <>
       {/* HEADER FIJO */}
@@ -16,15 +28,29 @@ export function AdminNavbar() {
 
           {/* Navegación Estilo Mockup */}
           <nav className="flex items-center bg-blue-50 rounded-lg p-1 border border-blue-100">
-            <Link href="/dashboard/admin" className="px-4 py-1.5 rounded-md bg-blue-200 text-blue-900 font-bold text-sm">Inicio</Link>
-            <div className="w-[1px] h-4 bg-gray-300 mx-2" />
-            <Link href="/dashboard/admin/psicologos" className="px-4 py-1.5 text-gray-600 hover:text-blue-800 text-sm">Psicólogos</Link>
-            <div className="w-[1px] h-4 bg-gray-300 mx-2" />
-            <Link href="/dashboard/admin/pacientes" className="px-4 py-1.5 text-gray-600 hover:text-blue-800 text-sm">Pacientes</Link>
-            <div className="w-[1px] h-4 bg-gray-300 mx-2" />
-            <Link href="/dashboard/admin/actividades" className="px-4 py-1.5 text-gray-600 hover:text-blue-800 text-sm">Actividades</Link>
-            <div className="w-[1px] h-4 bg-gray-300 mx-2" />
-            <Link href="/dashboard/admin/reportes" className="px-4 py-1.5 text-gray-600 hover:text-blue-800 text-sm">Reportes</Link>
+            {navLinks.map((link, index) => {
+              const isActive = pathname === link.href;
+
+              return (
+                <div key={link.name} className="flex items-center">
+                  <Link
+                    href={link.href}
+                    className={`px-4 py-1.5 rounded-md text-sm transition-all ${
+                      isActive
+                        ? "bg-blue-200 text-blue-900 font-bold"
+                        : "text-gray-600 hover:text-blue-800"
+                    }`}
+                  >
+                    {link.name}
+                  </Link>
+
+                  {/* Separador (menos en el último) */}
+                  {index < navLinks.length - 1 && (
+                    <div className="w-[1px] h-4 bg-gray-300 mx-2" />
+                  )}
+                </div>
+              );
+            })}
           </nav>
         </div>
 
