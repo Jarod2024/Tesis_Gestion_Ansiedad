@@ -24,3 +24,28 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+/* src/app/globals.css */
+@media print {
+  /* Oculta todo excepto el contenido del reporte */
+  body * {
+    visibility: hidden;
+  }
+  
+  /* Solo muestra el área de impresión y su contenido */
+  .print\:block, .print\:block * {
+    visibility: visible;
+  }
+
+  .print\:block {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  /* Evita que el navegador imprima colores de fondo si no está configurado */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
