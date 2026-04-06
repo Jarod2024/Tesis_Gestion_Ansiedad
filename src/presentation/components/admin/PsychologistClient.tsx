@@ -1,11 +1,11 @@
 'use client'
 
 import { useState } from "react";
-import { Search, Edit2, Trash2 } from "lucide-react";
+import { Search, Edit2, Trash2, UserPlus } from "lucide-react";
 import { Psychologist } from "@/domain/dtos/psychologist.dto";
-import { deletePsychologistAction } from "@/infrastructure/actions/psychologist.actions";
+// IMPORTANTE: Importamos la nueva acción
+import { deletePsychologistAction, togglePsychologistStatusAction } from "@/infrastructure/actions/psychologist.actions";
 import { CreatePsychologistModal } from "./CreatePsychologistModal";
-// 1. Importamos el modal de edición
 import { EditPsychologistModal } from "./EditPsychologistModal";
 
 interface Props { initialData: Psychologist[]; }
@@ -15,7 +15,6 @@ export function PsychologistClient({ initialData }: Props) {
   const [filter, setFilter] = useState("Todos");
   const [psychologists, setPsychologists] = useState(initialData);
   
-  // 2. Estados para los Modales
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedPsychologist, setSelectedPsychologist] = useState<Psychologist | null>(null);
@@ -23,10 +22,21 @@ export function PsychologistClient({ initialData }: Props) {
   // Lógica de filtrado
   const filteredData = psychologists.filter(doc => {
     const matchesSearch = doc.name.toLowerCase().includes(search.toLowerCase());
-    // Nota: Usamos 'estado' o 'status' según tu DTO
     const matchesFilter = filter === "Todos" || doc.estado === filter;
     return matchesSearch && matchesFilter;
   });
+
+  // NUEVA FUNCIÓN: Activar / Desactivar
+  const handleToggleStatus = async (id: string, currentStatus: string) => {
+    const result = await togglePsychologistStatusAction(id, currentStatus);
+    if (result.success) {
+      setPsychologists(prev => prev.map(p => 
+        p.id === id ? { ...p, estado: result.newStatus as 'Activo' | 'Inactivo' | 'Pendiente' } : p
+      ));
+    } else {
+      alert(result.error);
+    }
+  };
 
   const handleDelete = async (id: string) => {
     if (confirm("¿Estás seguro de eliminar este psicólogo?")) {
@@ -35,7 +45,6 @@ export function PsychologistClient({ initialData }: Props) {
     }
   };
 
-  // 3. Función para abrir el modal de edición con los datos del doc
   const handleEdit = (doc: Psychologist) => {
     setSelectedPsychologist(doc);
     setIsEditModalOpen(true);
@@ -66,7 +75,7 @@ export function PsychologistClient({ initialData }: Props) {
           onClick={() => setIsModalOpen(true)} 
           className="mt-5 bg-white hover:bg-gray-100 text-gray-900 border-2 border-gray-400 px-6 py-2 rounded-xl text-sm font-black shadow-sm transition-transform active:scale-95"
         >
-          Nuevo Doctor
+            NUEVO PSICÓLOGO
         </button>
       </div>
 
@@ -130,10 +139,18 @@ export function PsychologistClient({ initialData }: Props) {
                     </span>
                   </td>
                   <td className="px-4 py-4 flex justify-center gap-3">
-                    <button className="bg-white border-2 border-gray-800 px-3 py-1 rounded-lg text-[10px] font-black text-gray-900 hover:bg-gray-800 hover:text-white transition-all uppercase">
-                      Activar / Desactivar
+                    {/* BOTÓN ACTUALIZADO CON LOGICA REAL */}
+                    <button 
+                      onClick={() => handleToggleStatus(doc.id, doc.estado)}
+                      className={`border-2 border-gray-800 px-3 py-1 rounded-lg text-[10px] font-black transition-all uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none ${
+                        doc.estado === 'Activo' 
+                        ? 'bg-red-200 hover:bg-red-300' 
+                        : 'bg-green-200 hover:bg-green-300'
+                      }`}
+                    >
+                      {doc.estado === 'Activo' ? 'Desactivar' : 'Activar'}
                     </button>
-                    {/* 4. Conectamos el botón de editar */}
+                    
                     <button 
                       onClick={() => handleEdit(doc)} 
                       className="text-gray-800 hover:text-blue-600 transition-colors"

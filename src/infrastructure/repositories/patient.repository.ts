@@ -1,21 +1,23 @@
 import pool from "@/infrastructure/database/db";
-import { Psychologist } from "@/domain/dtos/psychologist.dto";
+import { Patient } from "@/domain/dtos/patient.dto";
 
-export class PsychologistRepository {
-  async getAll(): Promise<Psychologist[]> {
+export class PatientRepository {
+  async getAll(): Promise<Patient[]> {
     const client = await pool.connect();
     try {
-      // Consultamos solo a los que tienen rol PSICOLOGO
-      // Si aún no tienes las columnas contacto/especialidad, las simulamos con strings
+      // Consultamos a los usuarios con rol 'ESTUDIANTE'
+      // Usamos COALESCE para evitar errores si las columnas nuevas están vacías
       const res = await client.query(`
         SELECT 
           id, 
           name, 
           email,
           contacto, 
-          status        
+          status,
+          -- Formateamos la fecha directamente desde SQL
+        TO_CHAR(created_at, 'DD/MM/YY') as fecha_registro        
           FROM users 
-        WHERE role = 'PSICOLOGO'
+        WHERE role = 'ESTUDIANTE'
         ORDER BY created_at DESC
       `);
 
@@ -24,10 +26,12 @@ export class PsychologistRepository {
         name: row.name,
         email: row.email,
         contacto: row.contacto || "N/A", // Dato ejemplo hasta que agregues la columna
-        especialidad: "N/A", // Dato ejemplo hasta que agregues la columna
-        pacientes: 0,
+        fecha_registro: row.fecha_registro,
         estado: row.status as 'Activo' | 'Inactivo' | 'Pendiente'
       }));
+    } catch (error: unknown) {
+      console.error("Error en PatientRepository.getAll:", error);
+      return [];
     } finally {
       client.release();
     }

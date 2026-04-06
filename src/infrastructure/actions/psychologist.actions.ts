@@ -80,3 +80,22 @@ export async function updatePsychologistAction(id: string, formData: UpdatePsych
     client.release();
   }
 }
+export async function togglePsychologistStatusAction(id: string, currentStatus: string) {
+  const client = await pool.connect();
+  try {
+    // Definimos el nuevo estado
+    const newStatus = currentStatus === 'Activo' ? 'Inactivo' : 'Activo';
+
+    await client.query(
+      'UPDATE users SET status = $1 WHERE id = $2 AND role = $3',
+      [newStatus, id, 'PSICOLOGO']
+    );
+
+    return { success: true, newStatus };
+  } catch (error: unknown) {
+    console.error("Error al cambiar estado del psicólogo:", error);
+    return { success: false, error: "No se pudo actualizar el estado" };
+  } finally {
+    client.release();
+  }
+}
