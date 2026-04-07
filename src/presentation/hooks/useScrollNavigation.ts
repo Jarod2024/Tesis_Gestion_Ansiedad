@@ -9,9 +9,13 @@ export function useScrollNavigation() {
       const recursosSection = document.getElementById('recursos');
       const heroBoundary = 400;
 
+      const infoOffset = infoSection?.offsetTop || 0;
+      const recursosOffset = recursosSection?.offsetTop || 0;
+      const midpoint = (infoOffset + recursosOffset) / 2;
+
       if (window.scrollY < heroBoundary) {
         setActiveSection('inicio');
-      } else if (window.scrollY < (infoSection?.offsetTop || 0) + (recursosSection?.offsetTop || 0) / 2) {
+      } else if (window.scrollY < midpoint) {
         setActiveSection('info');
       } else {
         setActiveSection('recursos');
