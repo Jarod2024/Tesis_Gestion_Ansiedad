@@ -5,14 +5,13 @@ import Link from 'next/link';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { User, Mail, Lock, CheckCircle, Loader2 } from "lucide-react";
+import { User, Mail, Lock, CheckCircle, Loader2, Phone } from "lucide-react"; // Añadido Phone
 import Image from 'next/image';
 
-// Esquema de validación con Zod
-// Esquema de validación con Zod corregido
 const registerSchema = z.object({
   name: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
   email: z.string().email("Correo inválido").endsWith("@espe.edu.ec", "Usa tu correo @espe.edu.ec"),
+  contacto: z.string().min(7, "Número de contacto inválido"), // Nuevo campo
   password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
   confirmPassword: z.string()
 }).refine((data) => data.password === data.confirmPassword, {
@@ -35,10 +34,18 @@ export const RegisterForm = () => {
     setLoading(true);
     setServerError("");
     try {
+      // Agregamos el rol por defecto para evitar el error de base de datos
+      const payload = { 
+        ...data, 
+        role: 'PACIENTE', // Asignamos el rol de paciente por defecto
+        status: 'Activo',
+        especialidad: null // Los estudiantes no tienen especialidad en tu DB
+      };
+
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
       });
 
       if (res.ok) router.push("/login");
@@ -55,29 +62,20 @@ export const RegisterForm = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-white p-6">
-      {/* Contenedor Principal Centrado */}
       <div className="flex w-full max-w-5xl flex-col md:flex-row items-center justify-center gap-16">
         
-        {/* Columna Izquierda: Ilustración (Solo visible en desktop) */}
-        
-
-        {/* Columna Derecha: Formulario Estilo Mockup */}
+        {/* Columna Derecha: Formulario */}
         <div className="w-full max-w-[600px] bg-[#D9E9FF] p-10 rounded-[45px] shadow-xl flex flex-col items-center border border-white/50">
           
-          <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-md border border-blue-200">
-                      <Image
-                        src="/images/logo-.png"
-                        alt="Logo"
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
+          <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-md border border-blue-200 mb-4">
+            <Image src="/images/logo-.png" alt="Logo" fill className="object-cover" />
+          </div>
           
           <h1 className="text-2xl font-bold text-[#1E4D8C] mb-8 tracking-widest uppercase">Registro</h1>
           
-          <form className="w-full space-y-5" onSubmit={handleSubmit(onSubmit)}>
+          <form className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
             
-            {/* Nombres Completos */}
+            {/* Nombre */}
             <div className="relative">
               <User className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
               <input 
@@ -86,7 +84,7 @@ export const RegisterForm = () => {
                 placeholder="Nombres Completos"
                 className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.name ? 'ring-2 ring-red-300' : ''}`}
               />
-              {errors.name && <p className="text-[10px] text-[#1E4D8C] mt-1 ml-2 font-bold uppercase italic">{errors.name.message}</p>}
+              {errors.name && <p className="text-[10px] text-red-500 mt-1 ml-2 font-bold uppercase italic">{errors.name.message}</p>}
             </div>
 
             {/* Email */}
@@ -98,10 +96,22 @@ export const RegisterForm = () => {
                 placeholder="Email (@espe.edu.ec)"
                 className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.email ? 'ring-2 ring-red-300' : ''}`}
               />
-              {errors.email && <p className="text-[10px] text-[#1E4D8C] mt-1 ml-2 font-bold uppercase italic">{errors.email.message}</p>}
+              {errors.email && <p className="text-[10px] text-red-500 mt-1 ml-2 font-bold uppercase italic">{errors.email.message}</p>}
+            </div>
+
+            {/* Contacto */}
+            <div className="relative">
+              <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
+              <input 
+                {...register("contacto")}
+                type="text" 
+                placeholder="Número de Contacto"
+                className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.contacto ? 'ring-2 ring-red-300' : ''}`}
+              />
+              {errors.contacto && <p className="text-[10px] text-red-500 mt-1 ml-2 font-bold uppercase italic">{errors.contacto.message}</p>}
             </div>
             
-            {/* Contraseña */}
+            {/* Password */}
             <div className="relative">
               <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
               <input 
@@ -110,10 +120,10 @@ export const RegisterForm = () => {
                 placeholder="Contraseña"
                 className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.password ? 'ring-2 ring-red-300' : ''}`}
               />
-              {errors.password && <p className="text-[10px] text-[#1E4D8C] mt-1 ml-2 font-bold uppercase italic">{errors.password.message}</p>}
+              {errors.password && <p className="text-[10px] text-red-500 mt-1 ml-2 font-bold uppercase italic">{errors.password.message}</p>}
             </div>
 
-            {/* Confirmar Contraseña */}
+            {/* Confirm Password */}
             <div className="relative">
               <CheckCircle className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
               <input 
@@ -122,15 +132,15 @@ export const RegisterForm = () => {
                 placeholder="Confirmar Contraseña"
                 className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.confirmPassword ? 'ring-2 ring-red-300' : ''}`}
               />
-              {errors.confirmPassword && <p className="text-[10px] text-[#1E4D8C] mt-1 ml-2 font-bold uppercase italic">{errors.confirmPassword.message}</p>}
+              {errors.confirmPassword && <p className="text-[10px] text-red-500 mt-1 ml-2 font-bold uppercase italic">{errors.confirmPassword.message}</p>}
             </div>
 
-            {serverError && <p className="text-[10px] text-[#1E4D8C] mt-1 ml-2 font-bold uppercase italic">{serverError}</p>}
+            {serverError && <p className="text-[10px] text-red-600 mt-1 ml-2 font-bold uppercase italic bg-red-50 p-2 rounded-lg border border-red-200">{serverError}</p>}
 
             <button 
               type="submit"
               disabled={loading}
-              className="w-full bg-[#71A5D9] hover:bg-[#1E4D8C] text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-2"
+              className="w-full bg-[#71A5D9] hover:bg-[#1E4D8C] text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-2 mt-4"
             >
               {loading ? <Loader2 className="animate-spin" /> : "Registrar Usuario"}
             </button>
@@ -145,7 +155,6 @@ export const RegisterForm = () => {
             </div>
           </form>
         </div>
-
       </div>
     </div>
   );

@@ -17,7 +17,7 @@ export class PatientRepository {
           -- Formateamos la fecha directamente desde SQL
         TO_CHAR(created_at, 'DD/MM/YY') as fecha_registro        
           FROM users 
-        WHERE role = 'ESTUDIANTE'
+        WHERE role = 'PACIENTE'
         ORDER BY created_at DESC
       `);
 
