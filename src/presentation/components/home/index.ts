@@ -1,0 +1,7 @@
+export { Header } from './Header';
+export { HeroSection } from './HeroSection';
+export { WelcomeBox } from './WelcomeBox';
+export { InformateSection } from './InformateSection';
+export { RecursosSection } from './RecursosSection';
+export { InfoCard } from './InfoCard';
+export { Footer } from './Footer';
