@@ -1,0 +1,1 @@
+export { GAD7Test } from './GAD7Test';
