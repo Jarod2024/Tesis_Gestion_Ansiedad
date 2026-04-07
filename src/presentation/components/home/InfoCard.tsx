@@ -5,9 +5,10 @@ interface InfoCardProps {
   title: string;
   description: string;
   buttonText: string;
+  onButtonClick?: () => void;
 }
 
-export function InfoCard({ icon, title, description, buttonText }: InfoCardProps) {
+export function InfoCard({ icon, title, description, buttonText, onButtonClick }: InfoCardProps) {
   return (
     <div className="group bg-white rounded-2xl border-4 border-[#71A5D9] p-8 shadow-xl hover:shadow-2xl transition transform hover:scale-105 cursor-pointer flex flex-col h-full">
       <div className="text-[#71A5D9] mb-4">
@@ -17,7 +18,10 @@ export function InfoCard({ icon, title, description, buttonText }: InfoCardProps
       <p className="text-slate-700 text-lg mb-6 leading-relaxed flex-grow">
         {description}
       </p>
-      <button className="w-full py-3 px-6 bg-[#71A5D9] text-white font-bold text-lg rounded-lg hover:bg-[#1E4D8C] transition shadow-lg">
+      <button 
+        onClick={onButtonClick}
+        className="w-full py-3 px-6 bg-[#71A5D9] text-white font-bold text-lg rounded-lg hover:bg-[#1E4D8C] transition shadow-lg"
+      >
         {buttonText}
       </button>
     </div>
