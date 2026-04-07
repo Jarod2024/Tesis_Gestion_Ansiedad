@@ -1,4 +1,4 @@
-import { AdminNavbar } from "@/presentation/components/shared/AdminNavbar";
+import { AdminNavbar } from "@/presentation/components/admin/AdminNavbar";
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (

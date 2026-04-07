@@ -46,7 +46,7 @@ export async function createPatientAction(formData: CreatePatientData) {
     // Usamos el rol 'ESTUDIANTE' o 'PACIENTE' según tu lógica de negocio
     await client.query(
       `INSERT INTO users (name, email, password, role, status, contacto) 
-       VALUES ($1, $2, $3, 'ESTUDIANTE', 'Activo', $4)`,
+       VALUES ($1, $2, $3, 'PACIENTE', 'Activo', $4)`,
       [name, email, hashedPassword, contacto]
     );
 
