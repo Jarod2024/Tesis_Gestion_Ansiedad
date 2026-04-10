@@ -15,6 +15,7 @@ export class LoginUserUseCase {
 
     // Retornamos el rol para la redirección
     return { 
+      id: user.id,
       role: user.role, // PACIENTE, PSICOLOGO o ADMINISTRADOR
       name: user.name 
     };
