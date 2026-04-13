@@ -146,10 +146,15 @@ export function PatientClient({ initialData }: Props) {
             <td className="px-4 py-4 flex justify-center gap-3">
               <button 
                 onClick={() => handleToggleStatus(p.id, p.estado)}
-                className="bg-white border-2 border-gray-800 px-3 py-1 rounded-lg text-[10px] font-black text-gray-900 hover:bg-gray-800 hover:text-white transition-all uppercase"
-              >
-                {p.estado === 'Activo' ? 'Desactivar' : 'Activar'}
-              </button>
+                className={`border-2 border-gray-800 px-3 py-1 rounded-lg text-[10px] font-black transition-all uppercase shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:shadow-none ${
+                        p.estado === 'Activo' 
+                        ? 'bg-red-200 hover:bg-red-300' 
+                        : 'bg-green-200 hover:bg-green-300'
+                      }`}
+                    >
+                      {p.estado === 'Activo' ? 'Desactivar' : 'Activar'}
+                    </button>
+                    
               <button 
                 onClick={() => handleEdit(p)} 
                 className="text-gray-800 hover:text-blue-600 transition-colors"

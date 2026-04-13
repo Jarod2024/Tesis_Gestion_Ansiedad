@@ -1,38 +1,60 @@
 'use client'
 
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 import { useState } from "react";
-// Agrega CreatePatientData aquí adentro de las llaves { }
 import { createPatientAction, CreatePatientData } from "@/infrastructure/actions/patient.actions";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+// 1. Definimos el esquema de validación con Zod
+const patientSchema = z.object({
+  name: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
+  email: z.string().email("Correo inválido"),
+  contacto: z.string().min(7, "Número de contacto inválido"),
+  password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
+});
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
 }
 
-
 export function CreatePatientModal({ isOpen, onClose }: Props) {
   const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState("");
+
+  // 2. Configuramos react-hook-form usando la interfaz CreatePatientData
+  const { 
+    register, 
+    handleSubmit, 
+    formState: { errors },
+    reset 
+  } = useForm<CreatePatientData>({
+    resolver: zodResolver(patientSchema),
+  });
 
   if (!isOpen) return null;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  // 3. Reemplazamos la lógica nativa por la de react-hook-form
+  const onSubmit = async (data: CreatePatientData) => {
     setLoading(true);
+    setServerError("");
     
-    const formData = new FormData(e.currentTarget);
-    
-    // 2. Quitamos el 'as any' y usamos la interfaz exportada
-    const data = Object.fromEntries(formData) as unknown as CreatePatientData;
-
-    const result = await createPatientAction(data);
-    
-    setLoading(false);
-    if (result.success) {
-      alert("Paciente creado con éxito");
-      onClose();
-    } else {
-      alert("Error: " + result.error);
+    try {
+      const result = await createPatientAction(data);
+      
+      if (result.success) {
+        alert("Paciente creado con éxito");
+        reset(); // Limpiamos el form
+        onClose();
+      } else {
+        setServerError(result.error || "Error al crear el paciente");
+      }
+    } catch (err) {
+      setServerError("Error de conexión al servidor");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,63 +74,80 @@ export function CreatePatientModal({ isOpen, onClose }: Props) {
         </div>
 
         {/* Formulario */}
-        <form onSubmit={handleSubmit} className="p-8 space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-6">
           
           {/* Campo: Nombre Completo */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <label className="text-xs font-black text-gray-700 uppercase ml-1">Nombre Completo</label>
             <input 
-              name="name"
-              required
+              {...register("name")}
               type="text" 
               placeholder="Ej. Juan Pérez"
-              className="w-full p-4 rounded-2xl border-4 border-gray-800 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900 placeholder:text-gray-400"
+              className={`w-full p-4 rounded-2xl border-4 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900 placeholder:text-gray-400 transition-colors ${errors.name ? 'border-red-500' : 'border-gray-800'}`}
             />
+            {errors.name && <p className="text-[10px] text-red-500 mt-1 ml-1 font-bold uppercase italic">{errors.name.message}</p>}
           </div>
 
           {/* Campo: Correo Electrónico */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             <label className="text-xs font-black text-gray-700 uppercase ml-1">Correo Electrónico</label>
             <input 
-              name="email"
-              required
+              {...register("email")}
               type="email" 
               placeholder="usuario@ejemplo.com"
-              className="w-full p-4 rounded-2xl border-4 border-gray-800 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900 placeholder:text-gray-400"
+              className={`w-full p-4 rounded-2xl border-4 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900 placeholder:text-gray-400 transition-colors ${errors.email ? 'border-red-500' : 'border-gray-800'}`}
             />
+            {errors.email && <p className="text-[10px] text-red-500 mt-1 ml-1 font-bold uppercase italic">{errors.email.message}</p>}
           </div>
 
           {/* Dos columnas: Teléfono y Contraseña */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
+            <div className="space-y-1">
               <label className="text-xs font-black text-gray-700 uppercase ml-1">Contacto</label>
               <input 
-                name="contacto"
-                required
+                {...register("contacto")}
                 type="text" 
                 placeholder="09XXXXXXXX"
-                className="w-full p-4 rounded-2xl border-4 border-gray-800 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900"
+                className={`w-full p-4 rounded-2xl border-4 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900 transition-colors ${errors.contacto ? 'border-red-500' : 'border-gray-800'}`}
               />
+              {errors.contacto && <p className="text-[10px] text-red-500 mt-1 ml-1 font-bold uppercase italic">{errors.contacto.message}</p>}
             </div>
-            <div className="space-y-2">
+            
+            <div className="space-y-1">
               <label className="text-xs font-black text-gray-700 uppercase ml-1">Contraseña Temporal</label>
               <input 
-                name="password"
-                required
+                {...register("password")}
                 type="password" 
                 placeholder="••••••••"
-                className="w-full p-4 rounded-2xl border-4 border-gray-800 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900"
+                className={`w-full p-4 rounded-2xl border-4 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900 transition-colors ${errors.password ? 'border-red-500' : 'border-gray-800'}`}
               />
+              {errors.password && <p className="text-[10px] text-red-500 mt-1 ml-1 font-bold uppercase italic">{errors.password.message}</p>}
             </div>
           </div>
+
+          {/* Mostrar error del servidor si existe */}
+          {serverError && (
+            <div className="bg-red-50 border-4 border-red-500 p-3 rounded-2xl">
+              <p className="text-[11px] text-red-600 font-black uppercase italic text-center">
+                {serverError}
+              </p>
+            </div>
+          )}
 
           {/* Botón de Acción */}
           <button 
             type="submit"
             disabled={loading}
-            className="w-full bg-[#D1E7FF] hover:bg-green-400 text-gray-900 border-4 border-gray-800 py-4 rounded-2xl font-black text-lg shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all active:shadow-none active:translate-x-1 active:translate-y-1 disabled:opacity-50 uppercase"
+            className="w-full flex justify-center items-center gap-2 bg-[#D1E7FF] hover:bg-green-400 text-gray-900 border-4 border-gray-800 py-4 rounded-2xl font-black text-lg shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all active:shadow-none active:translate-x-1 active:translate-y-1 disabled:opacity-50 uppercase"
           >
-            {loading ? "GUARDANDO..." : "GUARDAR PACIENTE"}
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin" size={24} />
+                <span>GUARDANDO...</span>
+              </>
+            ) : (
+              "GUARDAR PACIENTE"
+            )}
           </button>
         </form>
       </div>

@@ -1,38 +1,76 @@
 'use client'
 
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Patient } from "@/domain/dtos/patient.dto";
 import { updatePatientAction, UpdatePatientData } from "@/infrastructure/actions/patient.actions";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+// 1. Solución definitiva: Usar z.union y z.literal. 
+// Esto es 100% compatible con TypeScript y evita el error de "any" o "overload"
+const editPatientSchema = z.object({
+  name: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
+  email: z.string().email("Correo inválido"),
+  contacto: z.string().min(7, "Número de contacto inválido"),
+  estado: z.union([
+    z.literal("Activo"),
+    z.literal("Inactivo"),
+    z.literal("Pendiente")
+  ]),
+});
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
-  patient: Patient | null; // Recibe el paciente a editar
+  patient: Patient | null;
 }
 
 export function EditPatientModal({ isOpen, onClose, patient }: Props) {
   const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState("");
 
-  // Si no hay paciente seleccionado o el modal está cerrado, no renderizamos nada
+  const { 
+    register, 
+    handleSubmit, 
+    formState: { errors },
+    reset 
+  } = useForm<UpdatePatientData>({
+    // 2. ¡Adiós al 'as any'! Ahora TypeScript reconoce que el esquema es perfecto
+    resolver: zodResolver(editPatientSchema),
+  });
+
+  useEffect(() => {
+    if (patient) {
+      reset({
+        name: patient.name,
+        email: patient.email,
+        contacto: patient.contacto,
+        estado: patient.estado as "Activo" | "Inactivo" | "Pendiente",
+      });
+    }
+  }, [patient, reset]);
+
   if (!isOpen || !patient) return null;
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const onSubmit = async (data: UpdatePatientData) => {
     setLoading(true);
+    setServerError("");
     
-    const formData = new FormData(e.currentTarget);
-    // Usamos el tipado correcto para evitar el error de 'any'
-    const data = Object.fromEntries(formData) as unknown as UpdatePatientData;
-
-    const result = await updatePatientAction(patient.id, data);
-    
-    setLoading(false);
-    if (result.success) {
-      alert("Paciente actualizado correctamente");
-      onClose();
-    } else {
-      alert("Error al actualizar: " + result.error);
+    try {
+      const result = await updatePatientAction(patient.id, data);
+      
+      if (result.success) {
+        alert("Paciente actualizado correctamente");
+        onClose();
+      } else {
+        setServerError(result.error || "Error al actualizar el paciente");
+      }
+    } catch (err) {
+      setServerError("Error de conexión al servidor");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -48,48 +86,47 @@ export function EditPatientModal({ isOpen, onClose, patient }: Props) {
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8 space-y-5">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-5">
           
-          <div className="space-y-2">
+          {/* Nombre */}
+          <div className="space-y-1">
             <label className="text-xs font-black text-gray-700 uppercase ml-1">Nombre Completo</label>
             <input 
-              name="name"
-              required
-              defaultValue={patient.name}
+              {...register("name")}
               type="text" 
-              className="w-full p-4 rounded-2xl border-4 border-gray-800 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900"
+              className={`w-full p-4 rounded-2xl border-4 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900 transition-colors ${errors.name ? 'border-red-500' : 'border-gray-800'}`}
             />
+            {errors.name && <p className="text-[10px] text-red-500 mt-1 ml-1 font-bold uppercase italic">{errors.name.message}</p>}
           </div>
 
-          <div className="space-y-2">
+          {/* Email */}
+          <div className="space-y-1">
             <label className="text-xs font-black text-gray-700 uppercase ml-1">Correo Electrónico</label>
             <input 
-              name="email"
-              required
-              defaultValue={patient.email}
+              {...register("email")}
               type="email" 
-              className="w-full p-4 rounded-2xl border-4 border-gray-800 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900"
+              className={`w-full p-4 rounded-2xl border-4 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900 transition-colors ${errors.email ? 'border-red-500' : 'border-gray-800'}`}
             />
+            {errors.email && <p className="text-[10px] text-red-500 mt-1 ml-1 font-bold uppercase italic">{errors.email.message}</p>}
           </div>
 
           {/* Fila de dos columnas para Teléfono y Estado */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
+            <div className="space-y-1">
               <label className="text-xs font-black text-gray-700 uppercase ml-1">Contacto</label>
               <input 
-                name="contacto"
-                required
-                defaultValue={patient.contacto}
+                {...register("contacto")}
                 type="text" 
-                className="w-full p-4 rounded-2xl border-4 border-gray-800 bg-gray-50 focus:outline-none font-bold text-gray-900"
+                className={`w-full p-4 rounded-2xl border-4 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900 transition-colors ${errors.contacto ? 'border-red-500' : 'border-gray-800'}`}
               />
+              {errors.contacto && <p className="text-[10px] text-red-500 mt-1 ml-1 font-bold uppercase italic">{errors.contacto.message}</p>}
             </div>
-            <div className="space-y-2">
+            
+            <div className="space-y-1">
               <label className="text-xs font-black text-gray-700 uppercase ml-1">Estado</label>
               <select 
-                name="estado"
-                defaultValue={patient.estado}
-                className="w-full p-4 rounded-2xl border-4 border-gray-800 bg-gray-50 focus:outline-none font-black text-gray-900 appearance-none cursor-pointer"
+                {...register("estado")}
+                className="w-full p-4 rounded-2xl border-4 bg-gray-50 border-gray-800 focus:bg-white focus:outline-none font-black text-gray-900 appearance-none cursor-pointer transition-colors"
               >
                 <option value="Activo">ACTIVO</option>
                 <option value="Inactivo">INACTIVO</option>
@@ -98,12 +135,29 @@ export function EditPatientModal({ isOpen, onClose, patient }: Props) {
             </div>
           </div>
 
+          {/* Mostrar error del servidor si existe */}
+          {serverError && (
+            <div className="bg-red-50 border-4 border-red-500 p-3 rounded-2xl">
+              <p className="text-[11px] text-red-600 font-black uppercase italic text-center">
+                {serverError}
+              </p>
+            </div>
+          )}
+
+          {/* Botón */}
           <button 
             type="submit"
             disabled={loading}
-            className="w-full bg-[#D1E7FF] hover:bg-yellow-300 text-gray-900 border-4 border-gray-800 py-4 rounded-2xl font-black text-lg shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all active:shadow-none active:translate-x-1 active:translate-y-1 disabled:opacity-50 uppercase"
+            className="w-full flex justify-center items-center gap-2 bg-[#D1E7FF] hover:bg-yellow-300 text-gray-900 border-4 border-gray-800 py-4 rounded-2xl font-black text-lg shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all active:shadow-none active:translate-x-1 active:translate-y-1 disabled:opacity-50 uppercase mt-4"
           >
-            {loading ? "ACTUALIZANDO..." : "ACTUALIZAR DATOS"}
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin" size={24} />
+                <span>ACTUALIZANDO...</span>
+              </>
+            ) : (
+              "ACTUALIZAR DATOS"
+            )}
           </button>
         </form>
       </div>
