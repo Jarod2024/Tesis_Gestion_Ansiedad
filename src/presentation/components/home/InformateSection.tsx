@@ -1,4 +1,5 @@
 import { Brain, Heart, FileText } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { InfoCard } from './InfoCard';
 
 const INFO_CARDS = [
@@ -10,8 +11,8 @@ const INFO_CARDS = [
   },
   {
     icon: <Heart size={56} />,
-    title: 'Depresión',
-    description: 'Reconoce signos de alerta, accede a recursos de apoyo y aprende cuándo y cómo buscar ayuda profesional.',
+    title: 'Salud Mental',
+    description: 'Reconoce signos de alerta, accede a recursos de apoyo y aprende cuándo buscar ayuda de un profesional de salud mental.',
     buttonText: 'Más Información →',
   },
   {
@@ -23,6 +24,8 @@ const INFO_CARDS = [
 ];
 
 export function InformateSection() {
+  const router = useRouter();
+
   return (
     <section id="info" className="max-w-7xl mx-auto px-6 py-16">
       <div className="mb-10">
@@ -32,7 +35,11 @@ export function InformateSection() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {INFO_CARDS.map((card, index) => (
-          <InfoCard key={index} {...card} />
+          <InfoCard 
+            key={index} 
+            {...card} 
+            onButtonClick={index === 2 ? () => router.push('/test') : undefined}
+          />
         ))}
       </div>
     </section>

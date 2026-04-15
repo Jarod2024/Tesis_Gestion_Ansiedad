@@ -11,7 +11,7 @@ export function HeroSection() {
           </h1>
           <p className="text-lg md:text-xl text-slate-700 mb-8 leading-relaxed">
             Bienvenido a MindPeace, un espacio dedicado a la gestión de ansiedad en estudiantes universitarios. 
-            Aquí encontrarás información, herramientas y recursos para cuidar tu salud mental.
+            Encontrarás información, herramientas y recursos para cuidar tu salud mental. Si lo necesitas, podrás encontrar ayuda profesional de especialistas en salud mental.
           </p>
 
           {/* CTA Buttons */}

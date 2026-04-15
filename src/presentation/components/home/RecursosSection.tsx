@@ -1,4 +1,5 @@
 import { BookOpen, Play, Zap } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { InfoCard } from './InfoCard';
 
 const RESOURCE_CARDS = [
@@ -11,7 +12,7 @@ const RESOURCE_CARDS = [
   {
     icon: <Play size={56} />,
     title: 'Videos Educativos',
-    description: 'Contenido audiovisual sobre técnicas de respiración, mindfulness y regulación emocional seleccionado para ti.',
+    description: 'Contenido audiovisual sobre técnicas de respiración, mindfulness "meditación consciente" y regulación emocional.',
     buttonText: 'Ver Videos',
   },
   {
@@ -23,6 +24,8 @@ const RESOURCE_CARDS = [
 ];
 
 export function RecursosSection() {
+  const router = useRouter();
+
   return (
     <section id="recursos" className="bg-gradient-to-r from-[#dfe9f8] to-[#e8f1ff] py-16">
       <div className="max-w-7xl mx-auto px-6">
@@ -33,7 +36,15 @@ export function RecursosSection() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {RESOURCE_CARDS.map((card, index) => (
-            <InfoCard key={index} {...card} />
+            <InfoCard 
+              key={index} 
+              {...card} 
+              onButtonClick={
+                index === 0 ? () => router.push('/biblioteca') :
+                index === 1 ? () => router.push('/videos') :
+                undefined
+              }
+            />
           ))}
         </div>
       </div>
