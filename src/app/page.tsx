@@ -4,6 +4,7 @@ import { useScrollNavigation } from '@/presentation/hooks/useScrollNavigation';
 import {
   Header,
   HeroSection,
+  VideoFeatureSection,
   WelcomeBox,
   InformateSection,
   RecursosSection,
@@ -17,6 +18,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100">
       <Header activeSection={activeSection} onNavClick={setActiveSection} />
       <HeroSection />
+      <VideoFeatureSection />
       <WelcomeBox />
       <InformateSection />
       <RecursosSection />

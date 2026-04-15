@@ -12,7 +12,7 @@ const RESOURCE_CARDS = [
   {
     icon: <Play size={56} />,
     title: 'Videos Educativos',
-    description: 'Contenido audiovisual sobre técnicas de respiración, mindfulness "meditación consciente" y regulación emocional.',
+    description: 'Contenido audiovisual sobre técnicas de respiración, mindfulness "meditación y conciencia del presente" y regulación emocional.',
     buttonText: 'Ver Videos',
   },
   {

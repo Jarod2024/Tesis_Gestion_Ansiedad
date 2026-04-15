@@ -38,7 +38,12 @@ export function InformateSection() {
           <InfoCard 
             key={index} 
             {...card} 
-            onButtonClick={index === 2 ? () => router.push('/test') : undefined}
+            onButtonClick={
+              index === 0 ? () => router.push('/ansiedad') :
+              index === 1 ? () => router.push('/salud-mental') :
+              index === 2 ? () => router.push('/test') :
+              undefined
+            }
           />
         ))}
       </div>
