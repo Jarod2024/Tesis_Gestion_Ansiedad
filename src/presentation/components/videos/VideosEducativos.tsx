@@ -26,27 +26,27 @@ function VideoCard({ title, videoId, onClick }: VideoProps & { onClick: () => vo
 
 const EDUCATIONAL_VIDEOS = [
   {
-    title: 'Tecnica de Respiracion',
+    title: 'Técnica de Respiración Diafragmática',
     videoId: 'T96Bl1Md_Oc',
   },
   {
-    title: 'Ataque de ansiedad',
+    title: '¿Qué Hacer Durante un Ataque de Ansiedad?',
     videoId: '34ZVrmJxEUo',
   },
   {
-    title: '4 Tecnica de Respiracion',
+    title: 'Técnica de Respiración 4-7-8',
     videoId: 'B5rhpspkyWw',
   },
   {
-    title: '¿Qué es mindfulness?',
+    title: '¿Qué es el Mindfulness?',
     videoId: 'Gq7jTUYtOz4',
   },
   {
-    title: 'Los beneficios de mindfulness',
+    title: 'Beneficios del Mindfulness para tu Salud Mental',
     videoId: 'awB9G2WZ_2w',
   },
   {
-    title: 'Como se practica mindfulness',
+    title: 'Cómo Practicar el Mindfulness en tu Día a Día',
     videoId: '64bWMVSX_ng',
   },
 ];
@@ -73,16 +73,15 @@ function Modal({ videoId, title, onClose }: { videoId: string; title: string; on
   );
 }
 
-export function VideosEducativos() {
+export function VideosEducativos({ onHomeClick }: { onHomeClick: () => void }) {
   const [selectedVideo, setSelectedVideo] = useState<{ videoId: string; title: string } | null>(null);
   const router = useRouter();
 
   return (
-    <div className="max-w-7xl mx-auto px-6">
+    <div className="max-w-7xl mx-auto px-6 pt-6">
       <div className="text-center mb-12">
         <h1 className="text-5xl font-black text-[#1E4D8C] mb-4">Videos Educativos</h1>
-        <p className="text-xl text-slate-700">Contenido audiovisual sobre técnicas de respiración, mindfulness y regulación emocional.</p>
-        
+        <p className="text-xl text-slate-700">Aprende técnicas de respiración, mindfulness (meditación y conciencia del presente) y estrategias para regular tus emociones.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -102,12 +101,14 @@ export function VideosEducativos() {
           onClose={() => setSelectedVideo(null)} 
         />
       )}
-      <button
-          onClick={() => router.push('/')}
-          className="mt-6 py-2 px-6 bg-[#71A5D9] text-white font-bold rounded-lg hover:bg-[#1E4D8C] transition"
+      <div className="mt-16 pt-12 border-t-2 border-blue-200 text-center">
+        <button
+          onClick={onHomeClick}
+          className="py-3 px-8 bg-[#71A5D9] text-white font-bold rounded-lg hover:bg-[#1E4D8C] transition shadow-lg"
         >
           Volver al Inicio
         </button>
+      </div>
     </div>
     
   );
