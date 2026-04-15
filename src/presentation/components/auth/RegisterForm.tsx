@@ -61,101 +61,105 @@ export const RegisterForm = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-white p-6">
-      <div className="flex w-full max-w-5xl flex-col md:flex-row items-center justify-center gap-16">
+  <div 
+    className="flex min-h-screen items-center justify-center bg-cover bg-center p-6"
+    style={{ backgroundImage: "url('/images/fondoLogin.png')" }}
+  >
+    <div className="flex w-full max-w-5xl flex-col md:flex-row items-center justify-center gap-16">
+      
+      {/* Columna Derecha: Formulario */}
+      <div className="w-full max-w-[600px] bg-[#D9E9FF] p-10 rounded-[45px] shadow-xl flex flex-col items-center border border-white/50">
         
-        {/* Columna Derecha: Formulario */}
-        <div className="w-full max-w-[600px] bg-[#D9E9FF] p-10 rounded-[45px] shadow-xl flex flex-col items-center border border-white/50">
+        <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-md border border-blue-200 mb-4">
+          <Image src="/images/logo-.png" alt="Logo" fill className="object-cover" />
+        </div>
+        
+        <h1 className="text-2xl font-bold text-[#1E4D8C] mb-8 tracking-widest uppercase">Registro</h1>
+        
+        <form className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
           
-          <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-md border border-blue-200 mb-4">
-            <Image src="/images/logo-.png" alt="Logo" fill className="object-cover" />
+          {/* Nombre */}
+          <div className="relative">
+            <User className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
+            <input 
+              {...register("name")}
+              type="text" 
+              placeholder="Nombres Completos"
+              className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.name ? 'ring-2 ring-red-300' : ''}`}
+            />
+            {errors.name && <p className="text-[10px] text-red-500 mt-1 ml-2 font-bold uppercase italic">{errors.name.message}</p>}
+          </div>
+
+          {/* Email */}
+          <div className="relative">
+            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
+            <input 
+              {...register("email")}
+              type="email" 
+              placeholder="Email (@espe.edu.ec)"
+              className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.email ? 'ring-2 ring-red-300' : ''}`}
+            />
+            {errors.email && <p className="text-[10px] text-red-500 mt-1 ml-2 font-bold uppercase italic">{errors.email.message}</p>}
+          </div>
+
+          {/* Contacto */}
+          <div className="relative">
+            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
+            <input 
+              {...register("contacto")}
+              type="text" 
+              placeholder="Número de Contacto"
+              className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.contacto ? 'ring-2 ring-red-300' : ''}`}
+            />
+            {errors.contacto && <p className="text-[10px] text-red-500 mt-1 ml-2 font-bold uppercase italic">{errors.contacto.message}</p>}
           </div>
           
-          <h1 className="text-2xl font-bold text-[#1E4D8C] mb-8 tracking-widest uppercase">Registro</h1>
+          {/* Password */}
+          <div className="relative">
+            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
+            <input 
+              {...register("password")}
+              type="password" 
+              placeholder="Contraseña"
+              className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.password ? 'ring-2 ring-red-300' : ''}`}
+            />
+            {errors.password && <p className="text-[10px] text-red-500 mt-1 ml-2 font-bold uppercase italic">{errors.password.message}</p>}
+          </div>
+
+          {/* Confirm Password */}
+          <div className="relative">
+            <CheckCircle className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
+            <input 
+              {...register("confirmPassword")}
+              type="password" 
+              placeholder="Confirmar Contraseña"
+              className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.confirmPassword ? 'ring-2 ring-red-300' : ''}`}
+            />
+            {errors.confirmPassword && <p className="text-[10px] text-red-500 mt-1 ml-2 font-bold uppercase italic">{errors.confirmPassword.message}</p>}
+          </div>
+
+          {serverError && <p className="text-[10px] text-red-600 mt-1 ml-2 font-bold uppercase italic bg-red-50 p-2 rounded-lg border border-red-200">{serverError}</p>}
+
+          <button 
+            type="submit"
+            disabled={loading}
+            className="w-full bg-[#71A5D9] hover:bg-[#1E4D8C] text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-2 mt-4"
+          >
+            {loading ? <Loader2 className="animate-spin" /> : "Registrar Usuario"}
+          </button>
           
-          <form className="w-full space-y-4" onSubmit={handleSubmit(onSubmit)}>
-            
-            {/* Nombre */}
-            <div className="relative">
-              <User className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
-              <input 
-                {...register("name")}
-                type="text" 
-                placeholder="Nombres Completos"
-                className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.name ? 'ring-2 ring-red-300' : ''}`}
-              />
-              {errors.name && <p className="text-[10px] text-red-500 mt-1 ml-2 font-bold uppercase italic">{errors.name.message}</p>}
-            </div>
-
-            {/* Email */}
-            <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
-              <input 
-                {...register("email")}
-                type="email" 
-                placeholder="Email (@espe.edu.ec)"
-                className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.email ? 'ring-2 ring-red-300' : ''}`}
-              />
-              {errors.email && <p className="text-[10px] text-red-500 mt-1 ml-2 font-bold uppercase italic">{errors.email.message}</p>}
-            </div>
-
-            {/* Contacto */}
-            <div className="relative">
-              <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
-              <input 
-                {...register("contacto")}
-                type="text" 
-                placeholder="Número de Contacto"
-                className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.contacto ? 'ring-2 ring-red-300' : ''}`}
-              />
-              {errors.contacto && <p className="text-[10px] text-red-500 mt-1 ml-2 font-bold uppercase italic">{errors.contacto.message}</p>}
-            </div>
-            
-            {/* Password */}
-            <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
-              <input 
-                {...register("password")}
-                type="password" 
-                placeholder="Contraseña"
-                className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.password ? 'ring-2 ring-red-300' : ''}`}
-              />
-              {errors.password && <p className="text-[10px] text-red-500 mt-1 ml-2 font-bold uppercase italic">{errors.password.message}</p>}
-            </div>
-
-            {/* Confirm Password */}
-            <div className="relative">
-              <CheckCircle className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1E4D8C]/50" size={20} />
-              <input 
-                {...register("confirmPassword")}
-                type="password" 
-                placeholder="Confirmar Contraseña"
-                className={`w-full pl-12 pr-4 py-3.5 rounded-2xl border-none outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.confirmPassword ? 'ring-2 ring-red-300' : ''}`}
-              />
-              {errors.confirmPassword && <p className="text-[10px] text-red-500 mt-1 ml-2 font-bold uppercase italic">{errors.confirmPassword.message}</p>}
-            </div>
-
-            {serverError && <p className="text-[10px] text-red-600 mt-1 ml-2 font-bold uppercase italic bg-red-50 p-2 rounded-lg border border-red-200">{serverError}</p>}
-
-            <button 
-              type="submit"
-              disabled={loading}
-              className="w-full bg-[#71A5D9] hover:bg-[#1E4D8C] text-white py-4 rounded-2xl font-bold shadow-lg shadow-blue-200 transition-all active:scale-95 flex items-center justify-center gap-2 mt-4"
-            >
-              {loading ? <Loader2 className="animate-spin" /> : "Registrar Usuario"}
-            </button>
-            
-            <div className="text-center mt-6">
-              <p className="text-xs text-[#1E4D8C]/70 italic font-medium">
-                ¿Ya tienes una cuenta?  
-                <Link href="/login" className="text-[#1E4D8C] font-bold ml-1 hover:underline">
-                  Inicia Sesión
-                </Link>
-              </p>
-            </div>
-          </form>
-        </div>
+          <div className="text-center mt-6">
+            <p className="text-xs text-[#1E4D8C]/70 italic font-medium">
+              ¿Ya tienes una cuenta?  
+              <Link href="/login" className="text-[#1E4D8C] font-bold ml-1 hover:underline">
+                Inicia Sesión
+              </Link>
+            </p>
+          </div>
+        </form>
       </div>
     </div>
-  );
+  </div>
+);
+
 };

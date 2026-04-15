@@ -1,0 +1,1 @@
+export { VideosEducativos } from './VideosEducativos';
