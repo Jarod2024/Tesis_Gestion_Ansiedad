@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { ArrowLeft } from 'lucide-react';
 
 const QUESTIONS = [
   '¿Se ha sentido nervioso/a, ansioso/a o con los nervios de punta?',
@@ -54,7 +55,17 @@ export function GAD7Test() {
   };
 
   return (
-    <div className="bg-white rounded-2xl border-4 border-[#71A5D9] p-8 shadow-xl">
+    <div className="space-y-6">
+      {/* Botón Volver */}
+      <button
+        onClick={() => router.push('/')}
+        className="flex items-center gap-2 px-4 py-2 bg-white text-[#1E4D8C] font-bold rounded-lg hover:bg-[#71A5D9] hover:text-white transition shadow-lg border-2 border-[#71A5D9]"
+      >
+        <ArrowLeft size={20} />
+        Volver al Inicio
+      </button>
+
+      <div className="bg-white rounded-2xl border-4 border-[#71A5D9] p-8 shadow-xl">
       {!result ? (
         <>
           <h1 className="text-4xl font-black text-[#1E4D8C] mb-6 text-center">
@@ -122,6 +133,7 @@ export function GAD7Test() {
           </button>
         </div>
       )}
+    </div>
     </div>
   );
 }

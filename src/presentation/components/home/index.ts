@@ -1,5 +1,6 @@
 export { Header } from './Header';
 export { HeroSection } from './HeroSection';
+export { VideoFeatureSection } from './VideoFeatureSection';
 export { WelcomeBox } from './WelcomeBox';
 export { InformateSection } from './InformateSection';
 export { RecursosSection } from './RecursosSection';

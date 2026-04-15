@@ -11,8 +11,8 @@ const INFO_CARDS = [
   },
   {
     icon: <Heart size={56} />,
-    title: 'Depresión',
-    description: 'Reconoce signos de alerta, accede a recursos de apoyo y aprende cuándo y cómo buscar ayuda profesional.',
+    title: 'Salud Mental',
+    description: 'Reconoce signos de alerta, accede a recursos de apoyo y aprende cuándo buscar ayuda de un profesional de salud mental.',
     buttonText: 'Más Información →',
   },
   {
@@ -38,7 +38,12 @@ export function InformateSection() {
           <InfoCard 
             key={index} 
             {...card} 
-            onButtonClick={index === 2 ? () => router.push('/test') : undefined}
+            onButtonClick={
+              index === 0 ? () => router.push('/ansiedad') :
+              index === 1 ? () => router.push('/salud-mental') :
+              index === 2 ? () => router.push('/test') :
+              undefined
+            }
           />
         ))}
       </div>
