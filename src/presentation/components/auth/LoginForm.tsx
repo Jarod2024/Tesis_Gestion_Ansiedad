@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Mail, Lock, LogIn, Loader2 } from "lucide-react";
 import Image from 'next/image';
+import { signIn } from "next-auth/react";
 
 // Esquema de validación con Zod
 const loginSchema = z.object({
@@ -32,21 +33,30 @@ export const LoginForm = () => {
     setServerError("");
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+      // 1. Usamos NextAuth en lugar de fetch manual
+      const result = await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        redirect: false, // Lo manejamos manual para las redirecciones por rol
       });
 
-      const result = await res.json();
+      if (result?.error) {
+        setServerError("Credenciales incorrectas o usuario no encontrado");
+        return;
+      }
 
-      if (res.ok) {
-        // Redirección por roles según la ERS
-        if (result.role === "PACIENTE") router.push("/dashboard/paciente");
-        else if (result.role === "PSICOLOGO") router.push("/dashboard/psicologo");
-        else if (result.role === "ADMINISTRADOR") router.push("/dashboard/admin");
-      } else {
-        setServerError(result.error || "Credenciales incorrectas");
+      // 2. Si el login es exitoso, obtenemos la sesión para saber el rol
+      // Esto asegura que el ID sea el UUID correcto de la DB
+      const sessionRes = await fetch("/api/auth/session");
+      const session = await sessionRes.json();
+
+      if (session?.user?.role) {
+        const role = session.user.role;
+        if (role === "PACIENTE") router.push("/dashboard/paciente");
+        else if (role === "PSICOLOGO") router.push("/dashboard/psicologo");
+        else if (role === "ADMINISTRADOR") router.push("/dashboard/admin");
+        
+        router.refresh(); // Refresca para que el layout vea la nueva sesión
       }
     } catch (err) {
       setServerError("Error de conexión con el servidor");

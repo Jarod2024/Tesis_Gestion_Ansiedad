@@ -1,16 +1,23 @@
 'use client'
 
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
 import { updatePsychologistAction } from "@/infrastructure/actions/psychologist.actions";
 import { Psychologist } from "@/domain/dtos/psychologist.dto";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
-// 1. Definimos la interfaz para que coincida con la acción del servidor
-interface PsychologistFormData {
-  name: string;
-  email: string;
-  especialidad: string;
-  contacto: string;
-}
+// 1. Definimos el esquema de validación con Zod
+const editPsychologistSchema = z.object({
+  name: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
+  email: z.string().email("Correo inválido"),
+  especialidad: z.string().min(3, "La especialidad debe tener al menos 3 caracteres"),
+  contacto: z.string().min(7, "Número de contacto inválido"),
+});
+
+// Extraemos el tipo automáticamente de Zod para no repetir la interfaz
+export type PsychologistFormData = z.infer<typeof editPsychologistSchema>;
 
 interface Props {
   isOpen: boolean;
@@ -19,95 +26,135 @@ interface Props {
 }
 
 export function EditPsychologistModal({ isOpen, onClose, psychologist }: Props) {
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState("");
+
+  // 2. Configuramos React Hook Form con Zod
+  const { 
+    register, 
+    handleSubmit, 
+    formState: { errors },
+    reset 
+  } = useForm<PsychologistFormData>({
+    resolver: zodResolver(editPsychologistSchema),
+  });
+
+  // 3. Cargamos los datos del psicólogo en el formulario cuando se abre
+  useEffect(() => {
+    if (psychologist) {
+      reset({
+        name: psychologist.name,
+        email: psychologist.email,
+        especialidad: psychologist.especialidad,
+        contacto: psychologist.contacto,
+      });
+    }
+  }, [psychologist, reset]);
+
   if (!isOpen || !psychologist) return null;
 
-  // 2. Usamos BaseSyntheticEvent para evitar el aviso de "deprecated"
-  const handleSubmit = async (e: React.BaseSyntheticEvent) => {
-    e.preventDefault();
+  const onSubmit = async (data: PsychologistFormData) => {
+    setLoading(true);
+    setServerError("");
     
-    const formData = new FormData(e.currentTarget as HTMLFormElement);
-    
-    // 3. Convertimos y forzamos el tipo de dato (casting)
-    const data = Object.fromEntries(formData.entries()) as unknown as PsychologistFormData;
-
-    const result = await updatePsychologistAction(psychologist.id, data);
-    
-    if (result.success) {
-      alert("Psicólogo actualizado correctamente");
-      onClose();
-    } else {
-      alert("Error: " + result.error);
+    try {
+      const result = await updatePsychologistAction(psychologist.id, data);
+      
+      if (result.success) {
+        alert("Psicólogo actualizado correctamente");
+        onClose();
+      } else {
+        setServerError(result.error || "Error al actualizar el psicólogo");
+      }
+    } catch (err) {
+      setServerError("Error de conexión al servidor");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-   <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white w-full max-w-md rounded-3xl border-4 border-gray-800 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white w-full max-w-lg rounded-3xl border-4 border-gray-800 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] overflow-hidden animate-in fade-in zoom-in duration-200">
         
-        <div className="bg-[#B6D4F5] p-6 border-b-4 border-gray-800 flex justify-between items-center">
-          <h2 className="text-xl font-black text-gray-900 uppercase">Editar Psicólogo</h2>
-          <button onClick={onClose} className="hover:rotate-90 transition-transform">
+        {/* Encabezado idéntico al de pacientes */}
+        <div className="bg-[#D1E7FF] border-b-4 border-gray-800 p-6 flex justify-between items-center">
+          <h2 className="text-2xl font-black text-gray-900 uppercase">EDITAR PSICÓLOGO</h2>
+          <button onClick={onClose} className="hover:bg-red-400 p-1 rounded-full border-2 border-transparent hover:border-gray-800 transition-all">
             <X size={24} className="text-gray-900" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-5">
           
-          <div>
-            <label className="block text-xs font-black uppercase mb-1 text-gray-700">
-              Nombre Completo
-            </label>
+          {/* Nombre Completo */}
+          <div className="space-y-1">
+            <label className="text-xs font-black text-gray-700 uppercase ml-1">Nombre Completo</label>
             <input 
-              name="name" 
-              defaultValue={psychologist.name} 
-              required 
-              className="w-full p-3 border-2 border-gray-800 rounded-xl focus:bg-blue-50 outline-none text-gray-900 placeholder-gray-500" 
+              {...register("name")}
+              type="text" 
+              className={`w-full p-4 rounded-2xl border-4 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900 transition-colors ${errors.name ? 'border-red-500' : 'border-gray-800'}`}
             />
+            {errors.name && <p className="text-[10px] text-red-500 mt-1 ml-1 font-bold uppercase italic">{errors.name.message}</p>}
           </div>
-          
-          <div>
-            <label className="block text-xs font-black uppercase mb-1 text-gray-700">
-              Correo Electrónico
-            </label>
+
+          {/* Correo Electrónico */}
+          <div className="space-y-1">
+            <label className="text-xs font-black text-gray-700 uppercase ml-1">Correo Electrónico</label>
             <input 
-              name="email" 
+              {...register("email")}
               type="email" 
-              defaultValue={psychologist.email} 
-              required 
-              className="w-full p-3 border-2 border-gray-800 rounded-xl focus:bg-blue-50 outline-none text-gray-900 placeholder-gray-500" 
+              className={`w-full p-4 rounded-2xl border-4 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900 transition-colors ${errors.email ? 'border-red-500' : 'border-gray-800'}`}
             />
+            {errors.email && <p className="text-[10px] text-red-500 mt-1 ml-1 font-bold uppercase italic">{errors.email.message}</p>}
           </div>
 
+          {/* Fila de dos columnas para Especialidad y Contacto */}
           <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-black uppercase mb-1 text-gray-700">
-                Especialidad
-              </label>
+            <div className="space-y-1">
+              <label className="text-xs font-black text-gray-700 uppercase ml-1">Especialidad</label>
               <input 
-                name="especialidad" 
-                defaultValue={psychologist.especialidad} 
-                required 
-                className="w-full p-3 border-2 border-gray-800 rounded-xl focus:bg-blue-50 outline-none text-gray-900 placeholder-gray-500" 
+                {...register("especialidad")}
+                type="text" 
+                className={`w-full p-4 rounded-2xl border-4 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900 transition-colors ${errors.especialidad ? 'border-red-500' : 'border-gray-800'}`}
               />
+              {errors.especialidad && <p className="text-[10px] text-red-500 mt-1 ml-1 font-bold uppercase italic">{errors.especialidad.message}</p>}
             </div>
-            <div>
-              <label className="block text-xs font-black uppercase mb-1 text-gray-700">
-                Contacto
-              </label>
+            
+            <div className="space-y-1">
+              <label className="text-xs font-black text-gray-700 uppercase ml-1">Contacto</label>
               <input 
-                name="contacto" 
-                defaultValue={psychologist.contacto} 
-                required 
-                className="w-full p-3 border-2 border-gray-800 rounded-xl focus:bg-blue-50 outline-none text-gray-900 placeholder-gray-500" 
+                {...register("contacto")}
+                type="text" 
+                className={`w-full p-4 rounded-2xl border-4 bg-gray-50 focus:bg-white focus:outline-none font-bold text-gray-900 transition-colors ${errors.contacto ? 'border-red-500' : 'border-gray-800'}`}
               />
+              {errors.contacto && <p className="text-[10px] text-red-500 mt-1 ml-1 font-bold uppercase italic">{errors.contacto.message}</p>}
             </div>
           </div>
 
+          {/* Mostrar error del servidor si existe */}
+          {serverError && (
+            <div className="bg-red-50 border-4 border-red-500 p-3 rounded-2xl">
+              <p className="text-[11px] text-red-600 font-black uppercase italic text-center">
+                {serverError}
+              </p>
+            </div>
+          )}
+
+          {/* Botón */}
           <button 
-            type="submit" 
-            className="w-full bg-[#B6D4F5] hover:bg-blue-400 border-4 border-gray-800 py-3 rounded-xl font-black uppercase shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1 transition-all text-gray-900"
+            type="submit"
+            disabled={loading}
+            className="w-full flex justify-center items-center gap-2 bg-[#D1E7FF] hover:bg-yellow-300 text-gray-900 border-4 border-gray-800 py-4 rounded-2xl font-black text-lg shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all active:shadow-none active:translate-x-1 active:translate-y-1 disabled:opacity-50 uppercase mt-4"
           >
-            Guardar Cambios
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin" size={24} />
+                <span>GUARDANDO...</span>
+              </>
+            ) : (
+              "GUARDAR CAMBIOS"
+            )}
           </button>
         </form>
       </div>

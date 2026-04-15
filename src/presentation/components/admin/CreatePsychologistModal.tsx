@@ -1,40 +1,64 @@
 'use client'
 
-import { X } from "lucide-react"; // Eliminamos useState si no se usa
+import { useState } from "react";
+import { X, Loader2 } from "lucide-react";
 import { createPsychologistAction } from "@/infrastructure/actions/psychologist.actions";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
-// Definimos la interfaz aquí o la importamos para que TS sepa qué esperar
-interface PsychologistFormData {
-  name: string;
-  email: string;
-  password: string;
-  especialidad: string;
-  contacto: string;
-}
+// 1. Definimos el esquema de validación con Zod
+const psychologistSchema = z.object({
+  name: z.string().min(3, "El nombre debe tener al menos 3 caracteres"),
+  email: z.string().email("Correo inválido"), // Quité la validación estricta de @espe.edu.ec, pero puedes agregarla con .endsWith() si es necesario
+  especialidad: z.string().min(3, "La especialidad es requerida"),
+  contacto: z.string().min(7, "Número de contacto inválido"),
+  password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
+});
+
+// Inferimos el tipo a partir del esquema
+type PsychologistFormData = z.infer<typeof psychologistSchema>;
 
 export function CreatePsychologistModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
+  const [loading, setLoading] = useState(false);
+  const [serverError, setServerError] = useState("");
+
+  // 2. Configuramos react-hook-form
+  const { 
+    register, 
+    handleSubmit, 
+    formState: { errors },
+    reset 
+  } = useForm<PsychologistFormData>({
+    resolver: zodResolver(psychologistSchema),
+  });
+
   if (!isOpen) return null;
 
-  // Cambiamos el tipo de evento a uno más estándar para evitar el "deprecated"
-  const handleSubmit = async (e: React.BaseSyntheticEvent) => {
-    e.preventDefault();
+  // 3. Manejador del submit usando los datos ya validados
+  const onSubmit = async (data: PsychologistFormData) => {
+    setLoading(true);
+    setServerError("");
     
-    const formData = new FormData(e.currentTarget as HTMLFormElement);
-    // Realizamos el cast 'as unknown as PsychologistFormData' para calmar a TS
-    const data = Object.fromEntries(formData.entries()) as unknown as PsychologistFormData;
-
-    const result = await createPsychologistAction(data);
-    
-    if (result.success) {
-      alert("Psicólogo creado con éxito");
-      onClose();
-    } else {
-      alert("Error: " + result.error);
+    try {
+      const result = await createPsychologistAction(data);
+      
+      if (result.success) {
+        alert("Psicólogo creado con éxito");
+        reset(); // Limpiamos el formulario tras el éxito
+        onClose();
+      } else {
+        setServerError(result.error || "Error al crear el psicólogo");
+      }
+    } catch (err) {
+      setServerError("Error de conexión al servidor");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-[#F7F7F7] w-full max-w-md rounded-3xl border-4 border-gray-800 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] overflow-hidden">
         
         {/* Header */}
@@ -46,65 +70,80 @@ export function CreatePsychologistModal({ isOpen, onClose }: { isOpen: boolean, 
         </div>
 
         {/* Formulario */}
-        <form onSubmit={handleSubmit} className="p-8 space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-4">
           
+          {/* Nombre */}
           <div>
             <label className="block text-xs font-black uppercase mb-1 text-gray-700">Nombre Completo</label>
             <input 
-              name="name" 
-              required 
-              className="w-full p-3 bg-[#EAF2FB] border-2 border-gray-700 rounded-xl focus:bg-white outline-none text-gray-900 placeholder-gray-500" 
+              {...register("name")}
+              className={`w-full p-3 bg-[#EAF2FB] border-2 rounded-xl focus:bg-white outline-none text-gray-900 placeholder-gray-500 ${errors.name ? 'border-red-500 focus:border-red-500' : 'border-gray-700'}`} 
               placeholder="Ej. Dr. Juan Pérez" 
             />
+            {errors.name && <p className="text-[10px] text-red-500 mt-1 ml-1 font-bold uppercase italic">{errors.name.message}</p>}
           </div>
           
+          {/* Email */}
           <div>
             <label className="block text-xs font-black uppercase mb-1 text-gray-700">Correo Electrónico</label>
             <input 
-              name="email" 
+              {...register("email")}
               type="email" 
-              required 
-              className="w-full p-3 bg-[#EAF2FB] border-2 border-gray-700 rounded-xl focus:bg-white outline-none text-gray-900 placeholder-gray-500" 
+              className={`w-full p-3 bg-[#EAF2FB] border-2 rounded-xl focus:bg-white outline-none text-gray-900 placeholder-gray-500 ${errors.email ? 'border-red-500 focus:border-red-500' : 'border-gray-700'}`} 
               placeholder="correo@ejemplo.com" 
             />
+            {errors.email && <p className="text-[10px] text-red-500 mt-1 ml-1 font-bold uppercase italic">{errors.email.message}</p>}
           </div>
 
           <div className="grid grid-cols-2 gap-4">
+            {/* Especialidad */}
             <div>
               <label className="block text-xs font-black uppercase mb-1 text-gray-700">Especialidad</label>
               <input 
-                name="especialidad" 
-                required 
-                className="w-full p-3 bg-[#EAF2FB] border-2 border-gray-700 rounded-xl focus:bg-white outline-none text-gray-900 placeholder-gray-500" 
+                {...register("especialidad")}
+                className={`w-full p-3 bg-[#EAF2FB] border-2 rounded-xl focus:bg-white outline-none text-gray-900 placeholder-gray-500 ${errors.especialidad ? 'border-red-500 focus:border-red-500' : 'border-gray-700'}`} 
                 placeholder="Clínica" 
               />
+              {errors.especialidad && <p className="text-[10px] text-red-500 mt-1 ml-1 font-bold uppercase italic">{errors.especialidad.message}</p>}
             </div>
+
+            {/* Contacto */}
             <div>
               <label className="block text-xs font-black uppercase mb-1 text-gray-700">Contacto</label>
               <input 
-                name="contacto" 
-                required 
-                className="w-full p-3 bg-[#EAF2FB] border-2 border-gray-700 rounded-xl focus:bg-white outline-none text-gray-900 placeholder-gray-500" 
+                {...register("contacto")}
+                className={`w-full p-3 bg-[#EAF2FB] border-2 rounded-xl focus:bg-white outline-none text-gray-900 placeholder-gray-500 ${errors.contacto ? 'border-red-500 focus:border-red-500' : 'border-gray-700'}`} 
                 placeholder="099..." 
               />
+              {errors.contacto && <p className="text-[10px] text-red-500 mt-1 ml-1 font-bold uppercase italic">{errors.contacto.message}</p>}
             </div>
           </div>
 
+          {/* Contraseña */}
           <div>
             <label className="block text-xs font-black uppercase mb-1 text-gray-700">Contraseña Temporal</label>
             <input 
-              name="password" 
+              {...register("password")}
               type="password" 
-              required 
-              className="w-full p-3 bg-[#EAF2FB] border-2 border-gray-700 rounded-xl focus:bg-white outline-none text-gray-900 placeholder-gray-500" 
+              className={`w-full p-3 bg-[#EAF2FB] border-2 rounded-xl focus:bg-white outline-none text-gray-900 placeholder-gray-500 ${errors.password ? 'border-red-500 focus:border-red-500' : 'border-gray-700'}`} 
             />
+            {errors.password && <p className="text-[10px] text-red-500 mt-1 ml-1 font-bold uppercase italic">{errors.password.message}</p>}
           </div>
 
+          {/* Mensaje de Error del Servidor */}
+          {serverError && (
+            <div className="bg-red-100 border-2 border-red-500 text-red-700 px-4 py-2 rounded-xl text-xs font-bold uppercase">
+              {serverError}
+            </div>
+          )}
+
+          {/* Botón de Submit */}
           <button 
             type="submit" 
-            className="w-full bg-[#AFC8E8] hover:bg-[#94B6DF] border-4 border-gray-800 py-3 rounded-xl font-black uppercase text-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1 transition-all"
+            disabled={loading}
+            className="w-full bg-[#AFC8E8] hover:bg-[#94B6DF] border-4 border-gray-800 py-3 rounded-xl font-black uppercase text-gray-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-1 active:translate-y-1 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2 mt-4"
           >
-            Guardar Psicólogo
+            {loading ? <Loader2 className="animate-spin" size={20} /> : "Guardar Psicólogo"}
           </button>
         </form>
       </div>

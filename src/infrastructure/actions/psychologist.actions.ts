@@ -3,6 +3,8 @@
 import pool from "@/infrastructure/database/db";
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcrypt"; // Cambiado a bcryptjs para evitar errores de módulo
+import { PgPsychologistRepository } from "../repositories/pg-psychologist.repository";
+import { GetPsychologistDashboard } from "@/application/use-cases/get-psychologist-dashboard.use-case";
 
 // 1. Interfaces específicas para evitar el error 'any'
 interface CreatePsychologistData {
@@ -97,5 +99,23 @@ export async function togglePsychologistStatusAction(id: string, currentStatus: 
     return { success: false, error: "No se pudo actualizar el estado" };
   } finally {
     client.release();
+  }
+}
+export async function getDashboardAction(psychologistId: string) {
+  // Siguiendo Clean Architecture: Action -> Use Case -> Repository
+  const repository = new PgPsychologistRepository();
+  const useCase = new GetPsychologistDashboard(repository);
+  
+  try {
+    const data = await useCase.execute(psychologistId);
+    return data;
+  } catch (error) {
+    console.error("Error en getDashboardAction:", error);
+    // Devolvemos datos vacíos para que la UI no rompa si falla la DB
+    return {
+      stats: { totalPatients: 0, pendingAppointments: 0, acceptedAppointments: 0 },
+      nextAppointments: [],
+      recentActivities: []
+    };
   }
 }
