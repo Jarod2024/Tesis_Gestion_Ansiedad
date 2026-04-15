@@ -28,17 +28,17 @@ function GuideCard({ title, image, url }: GuideCardProps) {
 
 const ACADEMIC_GUIDES = [
   {
-    title: 'Manejo Ansiedad Académica',
+    title: 'Manejo de Ansiedad Académica',
     image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3Ak-TOyX1tOiXYnjEMYbLb35_7wiLpEzZAA&s',
     url: 'https://cada.udd.cl/files/2018/11/2.-A.pdf',
   },
   {
-    title: 'Guía para el estres académico',
+    title: 'Guía para el Estrés Académico',
     image: 'https://psiconecta.org/wp-content/uploads/2023/05/Captura-de-Pantalla-2023-05-03-a-las-16.26.05.png',
     url: 'https://www.uv.es/iqdocent/guias/estres.pdf',
   },
   {
-    title: 'Taller de psicoeducación: La ansiedad',
+    title: 'Taller de Psicoeducación: La Ansiedad',
     image: 'https://imgv2-1-f.scribdassets.com/img/document/772084007/original/f0e99f8c0c/1?v=1',
     url: 'https://www.plenainclusioncanarias.org/wp-content/uploads/2022/12/Taller-de-psicoeducacion.-La-ansiedad-Guia-de-actividades.pdf',
   },
@@ -46,17 +46,17 @@ const ACADEMIC_GUIDES = [
 
 const SOCIAL_GUIDES = [
   {
-    title: 'Ansiedad Social',
+    title: 'Ansiedad Social: Cómo Superarla',
     image: 'https://claralopezpsicologia.com/wp-content/uploads/2024/10/ansiedad-social-portada.png',
     url: 'https://www.fundacionforo.com/uploads/pdfs/manual-tas.pdf', 
   },
   {
-    title: 'Competencia Socioemocional:Ansiedad Social',
+    title: 'Competencia Socioemocional: Ansiedad Social',
     image: 'https://upbility.es/cdn/shop/articles/Copy_of_5._9_9e7ebed4-e935-4354-9a19-ef134311a559.png?v=1742473431&width=1600',
     url: 'https://www.alcazarenformacion.es/wp-content/uploads/2024/07/GT_ansiedad-social_MCH.pdf', 
   },
   {
-    title: 'Timidez y Ansiedad Social',
+    title: 'Timidez y Fobia Social: Estrategias',
     image: 'https://itaepsicologia.com/wp-content/uploads/2018/07/blog-timidez-fobia-social.jpg',
     url: 'https://www.edesclee.com/img/cms/pdfs/9788433027115.pdf', 
   },
@@ -64,31 +64,30 @@ const SOCIAL_GUIDES = [
 
 const PERSONAL_GUIDES = [
   {
-    title: 'Guias de autoayuda para la depresion y ansiedad ',
+    title: 'Guías de Autoayuda: Depresión y Ansiedad',
     image: 'https://www.sspa.juntadeandalucia.es/servicioandaluzdesalud/sites/default/files/styles/sas_200x/public/sincfiles/wsas-media-imagen_publicacion/2020/pub_567_1.jpg?itok=9zDGMg4D',
     url: 'https://consaludmental.org/publicaciones/Guiasautoayudadepresionansiedad.pdf',
   },
   {
-    title: 'Manejo de Ansiedad',
+    title: 'Manejo Integral de la Ansiedad',
     image: 'https://www.espainun.com/wp-content/uploads/2024/02/ataques-de-ansiedad-768x768.jpg',
     url: 'https://semergen.es/files/docs/biblioteca/docConsultaRapida/2024/manejodelaAnsiedad.pdf',
   },
   {
-    title: 'Ansiedad como controlarla',
+    title: 'Cómo Controlar la Ansiedad en tu Vida',
     image: 'https://img.freepik.com/vector-premium/persona-siente-derrotada-abrumada-mientras-lucha-encontrar-paz-medio-caos-emocional_216520-131353.jpg?semt=ais_incoming&w=740&q=80',
     url: 'https://www.osakidetza.euskadi.eus/contenidos/informacion/salud_mental/es_4050/adjuntos/ansiedadComoControlarla_c.pdf',
   },
 ];
 
-export function Biblioteca() {
+export function Biblioteca({ onHomeClick }: { onHomeClick: () => void }) {
   const router = useRouter();
 
   return (
-    <div className="max-w-7xl mx-auto px-6">
+    <div className="max-w-7xl mx-auto px-6 pt-6">
       <div className="text-center mb-12">
         <h1 className="text-5xl font-black text-[#1E4D8C] mb-4">Biblioteca de Guías de Autoayuda</h1>
-
-        
+        <p className="text-xl text-slate-700">Recursos prácticos y verificados para manejar ansiedad, depresión y mejorar tu salud mental.</p>
       </div>
 
       <section className="mb-16">
@@ -117,12 +116,14 @@ export function Biblioteca() {
           ))}
         </div>
       </section>
-      <button
-          onClick={() => router.push('/')}
-          className="mt-6 py-2 px-6 bg-[#71A5D9] text-white font-bold rounded-lg hover:bg-[#1E4D8C] transition"
+      <div className="mt-16 pt-12 border-t-2 border-blue-200 text-center">
+        <button
+          onClick={onHomeClick}
+          className="py-3 px-8 bg-[#71A5D9] text-white font-bold rounded-lg hover:bg-[#1E4D8C] transition shadow-lg"
         >
           Volver al Inicio
         </button>
+      </div>
     </div>
   );
 }

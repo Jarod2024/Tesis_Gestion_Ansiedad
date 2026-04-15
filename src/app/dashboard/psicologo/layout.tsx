@@ -2,10 +2,10 @@ import { PsychologistNavbar } from "@/presentation/components/psychologist/Psych
 
 export default function PsychologistLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-[#F8FAFC]"> 
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 flex flex-col">
       {/* El Navbar del psicólogo con su propia navegación */}
       <PsychologistNavbar />
-      <main className="p-4 md:p-8">
+      <main className="p-8 flex-1">
         {children}
       </main>
     </div>

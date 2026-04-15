@@ -28,7 +28,7 @@ function getSeverity(score: number) {
   return { level: 'Severa', recommendation: 'Requiere intervención inmediata por especialistas.' };
 }
 
-export function GAD7Test() {
+export function GAD7Test({ onHomeClick }: { onHomeClick: () => void }) {
   const [responses, setResponses] = useState<number[]>(Array(7).fill(-1));
   const [result, setResult] = useState<{ score: number; severity: { level: string; recommendation: string } } | null>(null);
   const router = useRouter();
@@ -55,10 +55,10 @@ export function GAD7Test() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pt-12">
       {/* Botón Volver */}
       <button
-        onClick={() => router.push('/')}
+        onClick={onHomeClick}
         className="flex items-center gap-2 px-4 py-2 bg-white text-[#1E4D8C] font-bold rounded-lg hover:bg-[#71A5D9] hover:text-white transition shadow-lg border-2 border-[#71A5D9]"
       >
         <ArrowLeft size={20} />
@@ -126,7 +126,7 @@ export function GAD7Test() {
             Este resultado es confidencial y solo se muestra en tu navegador. Si necesitas apoyo profesional, considera registrarte para acceder a recursos adicionales.
           </p>
           <button
-            onClick={() => router.push('/')}
+            onClick={onHomeClick}
             className="py-3 px-8 bg-[#71A5D9] text-white font-bold text-lg rounded-lg hover:bg-[#1E4D8C] transition shadow-lg"
           >
             Volver al Inicio

@@ -1,5 +1,20 @@
-import { PatientDashboard } from "@/presentation/components/patient/PatientDashboard";
+'use client';
+
+import {
+  HeroSection,
+  VideoFeatureSection,
+  WelcomeBox,
+} from '@/presentation/components/home';
+import { PacienteInformateSection, PacienteRecursosSection } from '@/presentation/components/patient';
 
 export default function PatientPage() {
-  return <PatientDashboard />;
+  return (
+    <>
+      <HeroSection />
+      <VideoFeatureSection />
+      <WelcomeBox />
+      <PacienteInformateSection />
+      <PacienteRecursosSection />
+    </>
+  );
 }

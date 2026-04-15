@@ -1,11 +1,12 @@
 "use client";
 import React from 'react';
-import { Users, Calendar, CheckCircle, Eye, PlusCircle, LucideIcon } from 'lucide-react';
+import { Users, Calendar, CheckCircle, Clock, AlertCircle, Eye, PlusCircle, LucideIcon } from 'lucide-react';
 import { 
   PsychologistDashboardDTO, 
   AppointmentDTO, 
   ActivityDTO 
 } from "@/domain/dtos/psychologist-dashboard.dto";
+import Link from 'next/link';
 
 interface DashboardProps { 
   initialData: PsychologistDashboardDTO; 
@@ -15,100 +16,141 @@ export function PsychologistDashboard({ initialData }: DashboardProps) {
   const { stats, nextAppointments, recentActivities } = initialData;
 
   return (
-    <main className="p-8 space-y-8 bg-white min-h-screen">
-      {/* Banner Informativo */}
-      <div className="bg-[#F3F8FF] p-4 rounded-lg border border-blue-100">
-        <p className="text-blue-800 text-sm font-medium">
-          Bienvenido al panel de control. Aquí puedes gestionar tus citas y actividades pendientes.
-        </p>
+    <div className="space-y-8">
+      {/* Encabezado */}
+      <div>
+        <h1 className="text-4xl font-black text-[#1E4D8C]">Panel de Control</h1>
+        <p className="text-slate-600 mt-2">Gestiona tus citas, pacientes y actividades</p>
       </div>
 
       {/* Tarjetas de Estadísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <StatCard title="Pacientes" count={stats.totalPatients} color="bg-[#FFD1C1]" icon={Users} />
-        <StatCard title="Citas Pendientes" count={stats.pendingAppointments} color="bg-[#D1FFD1]" icon={Calendar} />
-        <StatCard title="Citas Aceptadas" count={stats.acceptedAppointments} color="bg-[#EBD1FF]" icon={CheckCircle} />
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatCard 
+          title="Pacientes" 
+          count={stats.totalPatients} 
+          icon={Users}
+          bgGradient="from-blue-100 to-blue-200"
+          textColor="text-[#1E4D8C]"
+        />
+        <StatCard 
+          title="Citas Pendientes" 
+          count={stats.pendingAppointments} 
+          icon={Clock}
+          bgGradient="from-yellow-100 to-yellow-200"
+          textColor="text-yellow-700"
+        />
+        <StatCard 
+          title="Citas Aceptadas" 
+          count={stats.acceptedAppointments} 
+          icon={CheckCircle}
+          bgGradient="from-green-100 to-green-200"
+          textColor="text-green-700"
+        />
+        <StatCard 
+          title="Notificaciones" 
+          count={recentActivities.length} 
+          icon={AlertCircle}
+          bgGradient="from-purple-100 to-purple-200"
+          textColor="text-purple-700"
+        />
       </div>
 
-      {/* Tablas de Gestión */}
-      <div className="space-y-6">
-  <DashboardTable<AppointmentDTO> 
-    title="PRÓXIMAS CITAS" 
-    columns={['HORA', 'Paciente', 'Tipo', 'Estado']} 
-    data={nextAppointments.map(app => ({
-      hora: app.hora,           // Coincide con AppointmentDTO
-      paciente: app.paciente,   // Coincide con AppointmentDTO
-      tipo: app.tipo,           // Coincide con AppointmentDTO
-      estado: app.estado        // Coincide con AppointmentDTO
-    }))}
-  />
-        <DashboardTable<ActivityDTO> 
-  title="ACTIVIDADES RECIENTES" 
-  columns={['Paciente', 'Actividad', 'Fecha Límite', 'Estado']} 
-  data={recentActivities.map(act => ({
-    paciente: act.paciente,
-    actividad: act.actividad,
-    fechaLimite: act.fechaLimite, // <-- Cambia "fecha" por "fechaLimite"
-    estado: act.estado
-  }))}
-/>
-</div>
-
-      {/* Acciones Rápidas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <QuickActionButton title="VER PACIENTES" icon={Eye} color="bg-[#D1D1FF]" />
-        <QuickActionButton title="ASIGNAR ACTIVIDADES" icon={PlusCircle} color="bg-[#FFD1FF]" />
-        <QuickActionButton title="VER CITAS" icon={Eye} color="bg-[#D1D1FF]" />
-      </div>
-    </main>
-  );
-}
-
-// --- COMPONENTES AUXILIARES CON CORRECCIONES ---
-
-interface TableProps<T> {
-  title: string;
-  columns: string[];
-  data: T[];
-}
-
-function DashboardTable<T extends object>({ title, columns, data }: TableProps<T>) {
-  return (
-    <div className="border border-gray-300 rounded-xl overflow-hidden shadow-sm bg-white">
-      <div className="p-3 border-b border-gray-300 bg-gray-50">
-        <h3 className="text-[11px] font-black text-gray-600 tracking-widest uppercase">{title}</h3>
-      </div>
-      <div className="overflow-x-auto">
-        <table className="w-full text-xs text-center">
-          <thead className="bg-[#D9D9D9] border-b border-gray-300">
-            <tr>
-              {columns.map((col) => (
-                <th key={col} className="py-2.5 border-r last:border-r-0 border-gray-400 font-bold uppercase text-gray-700">
-                  {col}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.length === 0 ? (
-              <tr className="h-16">
-                <td colSpan={columns.length} className="text-gray-400 italic bg-gray-50/50">
-                  No hay registros disponibles actualmente.
-                </td>
+      {/* PRÓXIMAS CITAS - Tabla */}
+      <div className="border border-gray-300 rounded-lg overflow-hidden shadow-md bg-white">
+        <div className="p-4 bg-gray-100 border-b border-gray-300">
+          <h2 className="text-sm font-black text-gray-700 uppercase tracking-wider">Próximas Citas</h2>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-200 border-b border-gray-300">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Hora</th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Paciente</th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Tipo</th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Estado</th>
               </tr>
-            ) : (
-              data.map((item, idx) => (
-                <tr key={idx} className="border-b last:border-b-0 hover:bg-blue-50/30 transition-colors">
-                  {Object.values(item).map((val, i) => (
-                    <td key={i} className="py-3.5 border-r last:border-r-0 border-gray-200 text-gray-700">
-                      {String(val)}
-                    </td>
-                  ))}
+            </thead>
+            <tbody>
+              {nextAppointments.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-4 py-8 text-center text-gray-500 italic">
+                    No hay citas agendadas
+                  </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                nextAppointments.map((apt, idx) => (
+                  <tr key={idx} className="border-b border-gray-200 hover:bg-blue-50 transition">
+                    <td className="px-4 py-3 text-sm font-semibold text-gray-800">{apt.hora}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">{apt.paciente}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700 capitalize">{apt.tipo}</td>
+                    <td className="px-4 py-3 text-sm">
+                      <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs font-bold rounded">
+                        {apt.estado}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* ACTIVIDADES - Tabla */}
+      <div className="border border-gray-300 rounded-lg overflow-hidden shadow-md bg-white">
+        <div className="p-4 bg-gray-100 border-b border-gray-300">
+          <h2 className="text-sm font-black text-gray-700 uppercase tracking-wider">Actividades</h2>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-200 border-b border-gray-300">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Paciente</th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Actividad</th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Fecha Límite</th>
+                <th className="px-4 py-3 text-left text-xs font-bold text-gray-700 uppercase">Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recentActivities.length === 0 ? (
+                <tr>
+                  <td colSpan={4} className="px-4 py-8 text-center text-gray-500 italic">
+                    No hay actividades pendientes
+                  </td>
+                </tr>
+              ) : (
+                recentActivities.map((act, idx) => (
+                  <tr key={idx} className="border-b border-gray-200 hover:bg-blue-50 transition">
+                    <td className="px-4 py-3 text-sm font-semibold text-gray-800">{act.paciente}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">{act.actividad}</td>
+                    <td className="px-4 py-3 text-sm text-gray-700">{act.fechaLimite}</td>
+                    <td className="px-4 py-3 text-sm">
+                      <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-bold rounded">
+                        {act.estado}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* ACCIONES RÁPIDAS */}
+      <div>
+        <h2 className="text-sm font-black text-gray-700 uppercase tracking-wider mb-4">Acciones Rápidas</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Link href="/dashboard/psicologo/pacientes">
+            <QuickActionButton title="VER PACIENTES" icon={Eye} />
+          </Link>
+          <Link href="/dashboard/psicologo/actividades">
+            <QuickActionButton title="ASIGNAR ACTIVIDADES" icon={PlusCircle} />
+          </Link>
+          <Link href="/dashboard/psicologo/citas">
+            <QuickActionButton title="VER CITAS" icon={Calendar} />
+          </Link>
+        </div>
       </div>
     </div>
   );
@@ -117,18 +159,21 @@ function DashboardTable<T extends object>({ title, columns, data }: TableProps<T
 interface StatCardProps {
   title: string;
   count: number;
-  color: string;
-  icon: LucideIcon; // Tipado correcto para iconos de Lucide
+  icon: LucideIcon;
+  bgGradient: string;
+  textColor: string;
 }
 
-function StatCard({ title, count, color, icon: Icon }: StatCardProps) {
+function StatCard({ title, count, icon: Icon, bgGradient, textColor }: StatCardProps) {
   return (
-    <div className={`${color} p-6 rounded-xl border border-gray-200 flex flex-col items-center shadow-sm transition-transform hover:scale-[1.02]`}>
-      <div className="flex items-center gap-3 font-black text-gray-800 text-2xl">
-        <Icon size={24} className="text-gray-700" />
-        <span>{count < 10 ? `0${count}` : count}</span>
+    <div className={`bg-gradient-to-br ${bgGradient} p-6 rounded-lg shadow-md border-2 border-white hover:shadow-lg transition`}>
+      <div className="flex items-start justify-between">
+        <div>
+          <p className="text-sm font-bold text-slate-600 uppercase tracking-wide">{title}</p>
+          <p className={`text-4xl font-black ${textColor} mt-2`}>{count}</p>
+        </div>
+        <Icon size={32} className={textColor} />
       </div>
-      <span className="text-[10px] font-bold uppercase mt-2 text-gray-600 tracking-wider">{title}</span>
     </div>
   );
 }
@@ -136,14 +181,13 @@ function StatCard({ title, count, color, icon: Icon }: StatCardProps) {
 interface ActionBtnProps {
   title: string;
   icon: LucideIcon;
-  color: string;
 }
 
-function QuickActionButton({ title, icon: Icon, color }: ActionBtnProps) {
+function QuickActionButton({ title, icon: Icon }: ActionBtnProps) {
   return (
-    <button className={`${color} p-8 rounded-2xl border border-gray-300 flex flex-col items-center gap-3 hover:brightness-95 transition-all shadow-md active:scale-95 group`}>
-      <Icon size={32} className="text-gray-700 group-hover:scale-110 transition-transform" />
-      <span className="font-black text-gray-800 text-[11px] uppercase tracking-tighter">{title}</span>
+    <button className="bg-gradient-to-br from-purple-100 to-purple-200 p-8 rounded-lg border-2 border-purple-300 flex flex-col items-center gap-3 hover:shadow-lg transition-all shadow-md hover:from-purple-200 hover:to-purple-300 group w-full">
+      <Icon size={32} className="text-purple-700 group-hover:scale-110 transition-transform" />
+      <span className="font-black text-purple-700 text-xs uppercase tracking-tighter text-center">{title}</span>
     </button>
   );
 }
