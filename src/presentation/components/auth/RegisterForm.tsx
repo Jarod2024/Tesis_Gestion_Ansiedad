@@ -71,7 +71,14 @@ export const RegisterForm = () => {
       <div className="w-full max-w-[600px] bg-[#D9E9FF] p-10 rounded-[45px] shadow-xl flex flex-col items-center border border-white/50">
         
         <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-md border border-blue-200 mb-4">
-          <Image src="/images/logo-.png" alt="Logo" fill className="object-cover" />
+          <Image 
+            src="/images/logo-.png" 
+            alt="Logo" 
+            fill 
+            className="object-cover"
+            sizes="56px"
+            priority
+          />
         </div>
         
         <h1 className="text-2xl font-bold text-[#1E4D8C] mb-8 tracking-widest uppercase">Registro</h1>

@@ -18,8 +18,8 @@ export function VideoFeatureSection() {
             <Play size={24} className="text-white" />
           </div>
           <div className="text-left">
-            <p className="text-white font-bold text-lg">¿Cómo entender tu salud mental?</p>
-            <p className="text-white/80 text-sm">Una historia sobre ansiedad y resiliencia</p>
+            <p className="text-white font-bold text-lg">¿Qué es la ansiedad?</p>
+            <p className="text-white/80 text-sm">Entiende la ansiedad, sus síntomas y cómo afecta tu vida</p>
           </div>
         </button>
       </section>
@@ -40,8 +40,8 @@ export function VideoFeatureSection() {
             <div className="relative" style={{ paddingBottom: '56.25%', height: 0 }}>
               <iframe
                 className="absolute top-0 left-0 w-full h-full"
-                src="https://www.youtube.com/embed/gVv1dFUaBQs?si=VyM6f0tud1kU0cYy"
-                title="Yo tenía un perro negro llamado Depresión"
+                src="https://www.youtube.com/embed/3BOVSMnLecs"
+                title="Manejo de Ansiedad: Estrategias Prácticas"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -50,10 +50,10 @@ export function VideoFeatureSection() {
 
             {/* Descripción */}
             <div className="bg-gray-900 text-white p-6">
-              <h3 className="text-2xl font-bold mb-2">Yo tenía un perro negro llamado Depresión</h3>
+              <h3 className="text-2xl font-bold mb-2">¿Qué es la Ansiedad?</h3>
               <p className="text-gray-300 text-sm">
-                Una reflexión inspiradora sobre salud mental, ansiedad y depresión. 
-                Esta historia nos ayuda a entender mejor estos temas y reconocer que no estamos solos en este camino.
+                Descubre qué es la ansiedad, sus síntomas físicos y emocionales, y cómo puede afectar tu vida diaria. 
+                Un video educativo que te ayuda a reconocer la ansiedad como síntoma, rasgo o trastorno, recordándote que no estás solo.
               </p>
             </div>
           </div>

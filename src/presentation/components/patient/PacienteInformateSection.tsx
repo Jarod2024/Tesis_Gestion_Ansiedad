@@ -18,7 +18,7 @@ const INFO_CARDS = [
   {
     icon: <FileText size={56} />,
     title: 'Análisis Personal',
-    description: 'Realiza el cuestionario GAD-7 de 7 preguntas para conocer tu nivel de ansiedad y recibir recomendaciones personalizadas.',
+    description: 'Completa el cuestionario GAD-7 para conocer tu nivel de ansiedad y obtener información valiosa sobre tu salud mental con recomendaciones personalizadas.',
     buttonText: 'Realizar Test →',
   },
 ];

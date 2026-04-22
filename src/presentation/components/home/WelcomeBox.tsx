@@ -1,7 +1,7 @@
 export function WelcomeBox() {
   const features = [
-    'Evaluación rápida de tu nivel de ansiedad con el Test GAD-7',
-    'Herramientas prácticas: técnicas de respiración, mindfulness "meditación y conciencia del presente" y ejercicios para calmar la mente',
+    'Conocimiento rápido de tu nivel de ansiedad con el Test GAD-7',
+    'Herramientas prácticas: técnicas de respiración, atención plena y ejercicios para calmar la mente',
     'Información confiable sobre cómo funciona la ansiedad y cómo manejarla',
     'Conexión con psicólogos que pueden orientarte según tus necesidades',
     'Un ambiente confidencial y seguro diseñado especialmente para estudiantes como tú',
@@ -14,7 +14,7 @@ export function WelcomeBox() {
         
         <p className="text-lg text-slate-700 leading-relaxed mb-4">
           MindPeace es un espacio digital creado para ayudarte a manejar la ansiedad de forma práctica y accesible. 
-          Nuestro sistema te permite evaluar tu nivel de ansiedad, aprender técnicas efectivas, acceder a recursos educativos 
+          Nuestro sistema te permite conocer tu nivel de ansiedad, aprender técnicas efectivas, acceder a recursos educativos 
           y conectar con profesionales de salud mental para recibir seguimiento personalizado.
         </p>
         

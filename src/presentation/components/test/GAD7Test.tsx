@@ -24,7 +24,7 @@ const OPTIONS = [
 function getSeverity(score: number) {
   if (score <= 4) return { level: 'Mínima', recommendation: 'Sugerir seguimiento preventivo.' };
   if (score <= 9) return { level: 'Leve', recommendation: 'Sugerir ejercicios de relajación y psicoeducación.' };
-  if (score <= 14) return { level: 'Moderada', recommendation: 'Punto de corte donde se recomienda evaluación clínica profesional.' };
+  if (score <= 14) return { level: 'Moderada', recommendation: 'Punto de corte donde se recomienda consulta con un profesional de salud mental.' };
   return { level: 'Severa', recommendation: 'Requiere intervención inmediata por especialistas.' };
 }
 
@@ -69,7 +69,7 @@ export function GAD7Test({ onHomeClick }: { onHomeClick: () => void }) {
       {!result ? (
         <>
           <h1 className="text-4xl font-black text-[#1E4D8C] mb-6 text-center">
-            Test de Autoevaluación GAD-7
+            Test de Autoevaluación: Conoce tu Nivel de Ansiedad GAD-7
           </h1>
           <p className="text-slate-700 text-lg mb-4 text-center">
             Responde las siguientes preguntas basándote en cómo te has sentido durante las últimas 2 semanas.

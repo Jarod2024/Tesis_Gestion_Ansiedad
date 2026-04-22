@@ -21,7 +21,14 @@ export function Header({ activeSection, onNavClick }: HeaderProps) {
         {/* Logo */}
         <div className="flex items-center gap-3">
           <div className="relative h-12 w-12">
-            <Image src="/images/Logo-.png" alt="MindPeace" fill className="object-contain" />
+            <Image 
+              src="/images/Logo-.png" 
+              alt="MindPeace" 
+              fill 
+              className="object-contain"
+              sizes="48px"
+              priority
+            />
           </div>
           <span className="font-black text-xl text-[#1E4D8C]">MindPeace</span>
         </div>
