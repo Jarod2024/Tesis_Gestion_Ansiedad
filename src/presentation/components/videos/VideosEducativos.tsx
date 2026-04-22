@@ -38,15 +38,15 @@ const EDUCATIONAL_VIDEOS = [
     videoId: 'B5rhpspkyWw',
   },
   {
-    title: '¿Qué es el Mindfulness?',
+    title: '¿Qué es la Atención Plena?',
     videoId: 'Gq7jTUYtOz4',
   },
   {
-    title: 'Beneficios del Mindfulness para tu Salud Mental',
+    title: 'Beneficios de la Atención Plena para tu Salud Mental',
     videoId: 'awB9G2WZ_2w',
   },
   {
-    title: 'Cómo Practicar el Mindfulness en tu Día a Día',
+    title: 'Cómo Practicar la Atención Plena en tu Día a Día',
     videoId: '64bWMVSX_ng',
   },
 ];
@@ -81,7 +81,7 @@ export function VideosEducativos({ onHomeClick }: { onHomeClick: () => void }) {
     <div className="max-w-7xl mx-auto px-6 pt-6">
       <div className="text-center mb-12">
         <h1 className="text-5xl font-black text-[#1E4D8C] mb-4">Videos Educativos</h1>
-        <p className="text-xl text-slate-700">Aprende técnicas de respiración, mindfulness (meditación y conciencia del presente) y estrategias para regular tus emociones.</p>
+        <p className="text-xl text-slate-700">Aprende técnicas de respiración, atención plena y estrategias para regular tus emociones.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

@@ -91,7 +91,7 @@ export function Biblioteca({ onHomeClick }: { onHomeClick: () => void }) {
       </div>
 
       <section className="mb-16">
-        <h2 className="text-3xl font-black text-[#1E4D8C] mb-8">Académica</h2>
+        <h2 className="text-3xl font-black text-[#1E4D8C] mb-8">Área Académica</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {ACADEMIC_GUIDES.map((guide, index) => (
             <GuideCard key={index} {...guide} />
@@ -100,7 +100,7 @@ export function Biblioteca({ onHomeClick }: { onHomeClick: () => void }) {
       </section>
 
       <section className="mb-16">
-        <h2 className="text-3xl font-black text-[#1E4D8C] mb-8">Social</h2>
+        <h2 className="text-3xl font-black text-[#1E4D8C] mb-8">Área Social</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {SOCIAL_GUIDES.map((guide, index) => (
             <GuideCard key={index} {...guide} />
@@ -109,7 +109,7 @@ export function Biblioteca({ onHomeClick }: { onHomeClick: () => void }) {
       </section>
 
       <section className="mb-16">
-        <h2 className="text-3xl font-black text-[#1E4D8C] mb-8">Personal</h2>
+        <h2 className="text-3xl font-black text-[#1E4D8C] mb-8">Área Personal</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {PERSONAL_GUIDES.map((guide, index) => (
             <GuideCard key={index} {...guide} />

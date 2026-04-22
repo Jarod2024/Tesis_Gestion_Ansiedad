@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
 import { AlertCircle, Shield, HelpCircle, Lightbulb, ArrowRight } from 'lucide-react';
 import { PatientHeader } from '@/presentation/components/patient/PatientHeader';
+import Image from 'next/image';
 
 export default function PacienteAnsiedadPage() {
   const [activeSection, setActiveSection] = useState('info');
@@ -46,6 +47,7 @@ export default function PacienteAnsiedadPage() {
               {[
                 { 
                   title: 'Síntomas Físicos', 
+                  image: '/images/educational/Sintomas-Fisicos.png',
                   items: [
                     'Palpitaciones o aceleración del corazón',
                     'Opresión en el pecho que causa dificultad respiratoria',
@@ -55,6 +57,7 @@ export default function PacienteAnsiedadPage() {
                 },
                 { 
                   title: 'Síntomas Emocionales', 
+                  image: '/images/educational/Sintomas-emocionales.jpg',
                   items: [
                     'Preocupación excesiva sobre el futuro',
                     'Irritabilidad o sensibilidad aumentada',
@@ -64,6 +67,7 @@ export default function PacienteAnsiedadPage() {
                 },
                 { 
                   title: 'Síntomas Cognitivos', 
+                  image: '/images/educational/Sintomas-cognitivos.jpg',
                   items: [
                     'Dificultad para concentrarse o mantener el enfoque',
                     'Insomnio o sueño de mala calidad',
@@ -72,15 +76,26 @@ export default function PacienteAnsiedadPage() {
                   ] 
                 }
               ].map((categoria, i) => (
-                <div key={i} className="bg-white rounded-lg p-6 border-2 border-[#71A5D9]">
-                  <h3 className="font-black text-[#1E4D8C] mb-4 text-lg">{categoria.title}</h3>
-                  <ul className="space-y-3">
-                    {categoria.items.map((item, j) => (
-                      <div key={j} className="bg-blue-50 rounded p-3 text-center">
-                        <p className="text-slate-700 text-sm font-medium">{item}</p>
-                      </div>
-                    ))}
-                  </ul>
+                <div key={i} className="bg-white rounded-lg border-2 border-[#71A5D9] overflow-hidden">
+                  {/* Imagen que ocupa todo el ancho */}
+                  <div className="relative w-full h-56">
+                    <Image
+                      src={categoria.image}
+                      alt={categoria.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="font-black text-[#1E4D8C] mb-4 text-lg text-center">{categoria.title}</h3>
+                    <ul className="space-y-3">
+                      {categoria.items.map((item, j) => (
+                        <div key={j} className="bg-blue-50 rounded p-3 text-center">
+                          <p className="text-slate-700 text-sm font-medium">{item}</p>
+                        </div>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
               ))}
             </div>
@@ -93,6 +108,7 @@ export default function PacienteAnsiedadPage() {
               {[
                 { 
                   title: 'Técnicas Inmediatas para Crisis', 
+                  image: '/images/educational/Tecnicas-Inmediatas.png',
                   items: [
                     'Respiración 4-7-8: Inhala 4, retiene 7, exhala 8 segundos',
                     'Grounding 5-4-3-2-1: Nombra 5 cosas que ves, 4 que tocas, 3 que oyes, 2 que hueles, 1 que saboreas',
@@ -102,22 +118,34 @@ export default function PacienteAnsiedadPage() {
                 },
                 { 
                   title: 'Hábitos Cotidianos Preventivos', 
+                  image: '/images/educational/Habitos-cotidianos.png',
                   items: [
                     'Mantén una rutina consistente día a día',
-                    'Realiza ejercicio regular: 30 minutos casi todos los días',
+                    'Realiza ejercicio regular: 30 minutos 4 días a la semana',
                     'Prioriza sueño de calidad: 7-8 horas cada noche',
                     'Cultiva conexión social: Pasa tiempo con personas que te apoyan'
                   ] 
                 }
               ].map((area, i) => (
-                <div key={i} className="bg-white rounded-lg p-6 border-2 border-[#71A5D9]">
-                  <h3 className="font-black text-[#1E4D8C] mb-6 text-xl">{area.title}</h3>
-                  <div className="space-y-4">
-                    {area.items.map((item, j) => (
-                      <div key={j} className="bg-blue-50 rounded-lg p-4 border border-[#71A5D9]">
-                        <p className="text-slate-700 text-sm font-medium">{item}</p>
-                      </div>
-                    ))}
+                <div key={i} className="bg-white rounded-lg border-2 border-[#71A5D9] overflow-hidden">
+                  {/* Imagen que ocupa todo el ancho */}
+                  <div className="relative w-full h-56">
+                    <Image
+                      src={area.image}
+                      alt={area.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <div className="p-6">
+                    <h3 className="font-black text-[#1E4D8C] mb-6 text-xl text-center">{area.title}</h3>
+                    <div className="space-y-4">
+                      {area.items.map((item, j) => (
+                        <div key={j} className="bg-blue-50 rounded-lg p-4 border border-[#71A5D9]">
+                          <p className="text-slate-700 text-sm font-medium">{item}</p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -130,7 +158,7 @@ export default function PacienteAnsiedadPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 'Los síntomas persisten más de 2 semanas sin mejoría',
-                'Interfieren significativamente en tu trabajo, escuela o relaciones personales',
+                'Limitan tu desempeño académico, laboral o relaciones personales',
                 'Experimentas pensamientos de autolesión o ataques de pánico frecuentes'
               ].map((item, i) => (
                 <div key={i} className="bg-white rounded-lg p-6 border-2 border-[#71A5D9] text-center">
@@ -146,21 +174,21 @@ export default function PacienteAnsiedadPage() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 { 
-                  title: 'Autocuidado', 
-                  desc: 'Dedica tiempo diario a actividades que disfrutes y que te relajen: lectura, música, baños relajantes o hobbies que te apasionan' 
+                  title: 'Actividades de Relajación', 
+                  desc: 'Participa en actividades que disfrutes: meditación, yoga, música, deportes o tiempo en espacios verdes del campus. Tu bienestar mental es fundamental' 
                 },
                 { 
-                  title: 'Apoyo Social', 
-                  desc: 'Mantén conexión regular con amigos y familia que te apoyan. No dudes en compartir cómo te sientes con personas de confianza' 
+                  title: 'Comunidad Estudiantil', 
+                  desc: 'Conecta con otros estudiantes de ESPE a través de grupos de estudio, clubes y actividades extracurriculares. El apoyo de tus pares es invaluable' 
                 },
                 { 
-                  title: 'Manejo Emocional', 
-                  desc: 'Aprende a reconocer y validar tus sentimientos sin juzgarte. La ansiedad es humana; aceptarla es el primer paso para manejarla' 
+                  title: 'Equilibrio Académico', 
+                  desc: 'Organiza tu tiempo de estudio, establece límites saludables y no dudes en buscar apoyo académico cuando lo necesites. Tu éxito va más allá de las calificaciones' 
                 }
               ].map((consejo, i) => (
                 <div key={i} className="bg-white rounded-lg p-6 border-2 border-[#71A5D9]">
-                  <h3 className="font-black text-[#1E4D8C] mb-3 text-lg">{consejo.title}</h3>
-                  <p className="text-slate-700 text-sm leading-relaxed">{consejo.desc}</p>
+                  <h3 className="font-black text-[#1E4D8C] mb-3 text-lg text-center">{consejo.title}</h3>
+                  <p className="text-slate-700 text-sm leading-relaxed text-center">{consejo.desc}</p>
                 </div>
               ))}
             </div>

@@ -26,14 +26,22 @@ export function HeroSection() {
               href="#info"
               className="text-center px-8 py-4 bg-white border-2 border-[#71A5D9] text-[#1E4D8C] font-bold text-lg rounded-xl hover:bg-blue-50 shadow-lg transition"
             >
-              Evalúa tu Ansiedad
+              ¿Quieres conocer tu nivel de ansiedad?
             </a>
           </div>
         </div>
 
         {/* Image */}
         <div className="relative h-80 md:h-96 rounded-2xl overflow-hidden shadow-2xl border-4 border-[#71A5D9]">
-          <Image src="/images/home-ansiedad.png" alt="Bienestar" fill className="object-cover" />
+          <Image 
+            src="/images/home-ansiedad.png" 
+            alt="Bienestar" 
+            fill 
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 50vw"
+            loading="eager"
+            priority
+          />
         </div>
       </div>
     </section>
