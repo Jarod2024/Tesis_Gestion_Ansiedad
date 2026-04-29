@@ -24,7 +24,7 @@ export default function PacienteVideosPage() {
   }
 
   const handleHomeClick = () => {
-    router.push('/dashboard/paciente');
+    router.push('/dashboard/paciente#recursos');
   };
 
   return (

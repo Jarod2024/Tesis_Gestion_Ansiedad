@@ -57,10 +57,10 @@ export function Header({ activeSection, onNavClick }: HeaderProps) {
           {/* Auth Links */}
           <div className="flex items-center gap-3">
             <Link href="/login" className="text-sm font-bold text-[#1E4D8C] px-4 py-2 rounded-lg hover:bg-blue-100 transition">
-              Iniciar Sesión
+              Iniciar sesión
             </Link>
             <Link href="/register" className="text-sm font-bold text-white bg-[#71A5D9] px-5 py-2 rounded-lg hover:bg-[#1E4D8C] shadow-lg transition">
-              Crear Cuenta
+              Crear cuenta
             </Link>
           </div>
         </div>

@@ -7,7 +7,7 @@ export default function VideosPage() {
   const router = useRouter();
 
   const handleHomeClick = () => {
-    router.push('/');
+    router.push('/#recursos');
   };
 
   return (

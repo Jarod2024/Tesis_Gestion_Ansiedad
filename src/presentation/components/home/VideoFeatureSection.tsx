@@ -9,10 +9,10 @@ export function VideoFeatureSection() {
   return (
     <>
       {/* Elemento pegado a la izquierda */}
-      <section className="max-w-7xl mx-auto px-6 py-2">
+      <section id="caracteristicas" className="max-w-7xl mx-auto px-6 py-0">
         <button
           onClick={() => setIsVideoOpen(true)}
-          className="group flex items-center gap-4 px-6 py-5 bg-[#71A5D9] hover:bg-[#1E4D8C] rounded-xl shadow-xl hover:shadow-2xl transition transform hover:scale-105 w-fit"
+          className="group flex items-center gap-4 px-6 py-3.5 bg-[#71A5D9] hover:bg-[#1E4D8C] rounded-xl shadow-xl hover:shadow-2xl transition transform hover:scale-105 w-fit"
         >
           <div className="p-2 bg-white/20 rounded-lg">
             <Play size={24} className="text-white" />
@@ -50,7 +50,7 @@ export function VideoFeatureSection() {
 
             {/* Descripción */}
             <div className="bg-gray-900 text-white p-6">
-              <h3 className="text-2xl font-bold mb-2">¿Qué es la Ansiedad?</h3>
+              <h3 className="text-2xl font-bold mb-2">¿Qué es la ansiedad?</h3>
               <p className="text-gray-300 text-sm">
                 Descubre qué es la ansiedad, sus síntomas físicos y emocionales, y cómo puede afectar tu vida diaria. 
                 Un video educativo que te ayuda a reconocer la ansiedad como síntoma, rasgo o trastorno, recordándote que no estás solo.

@@ -7,19 +7,19 @@ const INFO_CARDS = [
     icon: <Brain size={56} />,
     title: 'Ansiedad',
     description: 'Entiende qué es la ansiedad, identifica sus síntomas y aprende estrategias inmediatas para manejarla en tu día a día.',
-    buttonText: 'Más Información →',
+    buttonText: 'Más información →',
   },
   {
     icon: <Heart size={56} />,
-    title: 'Salud Mental',
+    title: 'Salud mental',
     description: 'Reconoce signos de alerta, accede a recursos de apoyo y aprende cuándo buscar ayuda de un profesional de salud mental.',
-    buttonText: 'Más Información →',
+    buttonText: 'Más información →',
   },
   {
     icon: <FileText size={56} />,
-    title: 'Análisis Personal',
+    title: 'Análisis personal',
     description: 'Completa el cuestionario GAD-7 para conocer tu nivel de ansiedad y obtener información valiosa sobre tu salud mental con recomendaciones personalizadas.',
-    buttonText: 'Realizar Test →',
+    buttonText: 'Realizar test →',
   },
 ];
 
@@ -27,8 +27,8 @@ export function PacienteInformateSection() {
   const router = useRouter();
 
   return (
-    <section id="info" className="max-w-7xl mx-auto px-6 py-16">
-      <div className="mb-10">
+    <section id="info" className="max-w-7xl mx-auto px-6 py-10 md:py-12">
+      <div className="mb-6 md:mb-8">
         <h2 className="text-4xl md:text-5xl font-black text-[#1E4D8C] mb-2">Infórmate</h2>
         <div className="h-1 w-32 bg-[#71A5D9] rounded-full"></div>
       </div>

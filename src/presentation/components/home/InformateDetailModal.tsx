@@ -68,7 +68,7 @@ export function InformateDetailModal({ isOpen, onClose, title, content }: Detail
               ¿Necesitas ayuda profesional? Te recomendamos conectar con los especialistas en salud mental de nuestra plataforma.
             </p>
             <button className="px-6 py-3 bg-[#71A5D9] text-white font-bold rounded-lg hover:bg-[#1E4D8C] transition">
-              Buscar Ayuda Profesional
+              Buscar ayuda profesional
             </button>
           </div>
         </div>

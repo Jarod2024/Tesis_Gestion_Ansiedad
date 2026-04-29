@@ -17,7 +17,7 @@ interface PatientHeaderProps {
 const NAV_ITEMS = [
   { id: 'inicio', label: 'Inicio', href: '/dashboard/paciente' },
   { id: 'tareas', label: 'Mis tareas', href: '/paciente/tareas' },
-  { id: 'citas', label: 'Agendar Citas', href: '/paciente/citas' },
+  { id: 'citas', label: 'Agendar citas', href: '/paciente/citas' },
 ];
 
 export function PatientHeader({ activeSection, onNavClick, userName = 'Paciente', userRole = 'ESTUDIANTE' }: PatientHeaderProps) {

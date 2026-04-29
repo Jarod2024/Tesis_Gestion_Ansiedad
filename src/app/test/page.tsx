@@ -7,7 +7,7 @@ export default function TestPage() {
   const router = useRouter();
 
   const handleHomeClick = () => {
-    router.push('/');
+    router.push('/#info');
   };
 
   return (

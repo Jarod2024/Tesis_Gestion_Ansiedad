@@ -17,7 +17,7 @@ export default function PatientLayout({ children }: { children: React.ReactNode 
         userName={session?.user?.name || 'Paciente'}
         userRole={session?.user?.role || 'ESTUDIANTE'}
       />
-      <main className="p-8 flex-1">{children}</main>
+      <main className="flex-1">{children}</main>
       <PatientFooter />
     </div>
   );
