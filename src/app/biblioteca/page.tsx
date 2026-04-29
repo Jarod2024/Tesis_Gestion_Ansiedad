@@ -7,7 +7,7 @@ export default function BibliotecaPage() {
   const router = useRouter();
 
   const handleHomeClick = () => {
-    router.push('/');
+    router.push('/#recursos');
   };
 
   return (

@@ -10,7 +10,7 @@ export function PatientNavbar() {
   const navLinks = [
     { name: "Inicio", href: "/dashboard/paciente" },
     { name: "Mis tareas", href: "/paciente/tareas" },
-    { name: "Agendar cita", href: "/paciente/citas" },
+    { name: "Agendar citas", href: "/paciente/citas" },
   ];
 
   return (

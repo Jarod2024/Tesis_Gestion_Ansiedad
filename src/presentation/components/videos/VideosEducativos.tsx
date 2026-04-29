@@ -26,27 +26,27 @@ function VideoCard({ title, videoId, onClick }: VideoProps & { onClick: () => vo
 
 const EDUCATIONAL_VIDEOS = [
   {
-    title: 'Técnica de Respiración Diafragmática',
+    title: 'Técnica de respiración diafragmática',
     videoId: 'T96Bl1Md_Oc',
   },
   {
-    title: '¿Qué Hacer Durante un Ataque de Ansiedad?',
+    title: '¿Qué hacer durante un ataque de ansiedad?',
     videoId: '34ZVrmJxEUo',
   },
   {
-    title: 'Técnica de Respiración 4-7-8',
+    title: 'Técnica de respiración 4-7-8',
     videoId: 'B5rhpspkyWw',
   },
   {
-    title: '¿Qué es la Atención Plena?',
+    title: '¿Qué es la atención plena?',
     videoId: 'Gq7jTUYtOz4',
   },
   {
-    title: 'Beneficios de la Atención Plena para tu Salud Mental',
+    title: 'Beneficios de la atención plena para tu salud mental',
     videoId: 'awB9G2WZ_2w',
   },
   {
-    title: 'Cómo Practicar la Atención Plena en tu Día a Día',
+    title: 'Cómo practicar la atención plena en tu día a día',
     videoId: '64bWMVSX_ng',
   },
 ];
@@ -80,7 +80,7 @@ export function VideosEducativos({ onHomeClick }: { onHomeClick: () => void }) {
   return (
     <div className="max-w-7xl mx-auto px-6 pt-6">
       <div className="text-center mb-12">
-        <h1 className="text-5xl font-black text-[#1E4D8C] mb-4">Videos Educativos</h1>
+        <h1 className="text-5xl font-black text-[#1E4D8C] mb-4">Videos educativos</h1>
         <p className="text-xl text-slate-700">Aprende técnicas de respiración, atención plena y estrategias para regular tus emociones.</p>
       </div>
 
@@ -106,7 +106,7 @@ export function VideosEducativos({ onHomeClick }: { onHomeClick: () => void }) {
           onClick={onHomeClick}
           className="py-3 px-8 bg-[#71A5D9] text-white font-bold rounded-lg hover:bg-[#1E4D8C] transition shadow-lg"
         >
-          Volver al Inicio
+          Volver al inicio
         </button>
       </div>
     </div>

@@ -5,11 +5,11 @@ export function WelcomeBox() {
     'Información confiable sobre cómo funciona la ansiedad y cómo manejarla',
     'Conexión con psicólogos que pueden orientarte según tus necesidades',
     'Un ambiente confidencial y seguro diseñado especialmente para estudiantes como tú',
+    'Todos tus datos personales se mantienen bajo anonimato absoluto',
   ];
-
   return (
-    <section className="max-w-7xl mx-auto px-6 py-8">
-      <div className="bg-white rounded-2xl border-4 border-[#71A5D9] p-8 shadow-xl">
+    <section id="que-es" className="max-w-7xl mx-auto px-6 py-4 md:py-6">
+      <div className="bg-white rounded-2xl border-4 border-[#71A5D9] p-6 md:p-7 shadow-xl">
         <h2 className="text-3xl font-black text-[#1E4D8C] mb-4">¿Qué es MindPeace?</h2>
         
         <p className="text-lg text-slate-700 leading-relaxed mb-4">

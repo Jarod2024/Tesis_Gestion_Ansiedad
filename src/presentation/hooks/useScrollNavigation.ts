@@ -1,24 +1,54 @@
 import { useState, useEffect } from 'react';
 
+const SECTION_LABELS: Record<string, string> = {
+  inicio: 'Inicio',
+  caracteristicas: 'Características',
+  'que-es': '¿Qué es MindPeace?',
+  info: 'Infórmate',
+  recursos: 'Recursos',
+};
+
 export function useScrollNavigation() {
   const [activeSection, setActiveSection] = useState('inicio');
+  const [lastVisitedSection, setLastVisitedSection] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Cargar última sección visitada desde localStorage
+    const saved = localStorage.getItem('lastVisitedSection');
+    if (saved) {
+      setLastVisitedSection(SECTION_LABELS[saved] ?? saved);
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      const infoSection = document.getElementById('info');
-      const recursosSection = document.getElementById('recursos');
-      const heroBoundary = 400;
+      const sections = [
+        { id: 'inicio', element: document.getElementById('inicio') },
+        { id: 'caracteristicas', element: document.getElementById('caracteristicas') },
+        { id: 'que-es', element: document.getElementById('que-es') },
+        { id: 'info', element: document.getElementById('info') },
+        { id: 'recursos', element: document.getElementById('recursos') },
+      ];
 
-      const infoOffset = infoSection?.offsetTop || 0;
-      const recursosOffset = recursosSection?.offsetTop || 0;
-      const midpoint = (infoOffset + recursosOffset) / 2;
+      let currentSection = 'inicio';
+      let minDistance = Infinity;
 
-      if (window.scrollY < heroBoundary) {
-        setActiveSection('inicio');
-      } else if (window.scrollY < midpoint) {
-        setActiveSection('info');
-      } else {
-        setActiveSection('recursos');
+      sections.forEach(({ id, element }) => {
+        if (element) {
+          const distance = Math.abs(element.getBoundingClientRect().top - 100);
+          if (distance < minDistance) {
+            minDistance = distance;
+            currentSection = id;
+          }
+        }
+      });
+
+      setActiveSection(currentSection);
+
+      if (currentSection !== 'inicio') {
+        const label = SECTION_LABELS[currentSection] ?? currentSection;
+        localStorage.setItem('lastVisitedSection', label);
+        setLastVisitedSection(label);
       }
     };
 
@@ -26,5 +56,5 @@ export function useScrollNavigation() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  return { activeSection, setActiveSection };
+  return { activeSection, setActiveSection, lastVisitedSection };
 }

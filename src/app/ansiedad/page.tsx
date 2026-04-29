@@ -18,11 +18,11 @@ export default function AnsiedadPage() {
 
         {/* Síntomas */}
         <div className="mb-16">
-          <h2 className="text-3xl font-black text-[#1E4D8C] mb-8">Síntomas Comunes de la Ansiedad</h2>
+          <h2 className="text-3xl font-black text-[#1E4D8C] mb-8">Síntomas comunes de la ansiedad</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { 
-                title: 'Síntomas Físicos', 
+                title: 'Síntomas físicos', 
                 image: '/images/educational/Sintomas-Fisicos.png',
                 items: [
                   'Palpitaciones o aceleración del corazón',
@@ -32,7 +32,7 @@ export default function AnsiedadPage() {
                 ] 
               },
               { 
-                title: 'Síntomas Emocionales', 
+                title: 'Síntomas emocionales', 
                 image: '/images/educational/Sintomas-emocionales.jpg',
                 items: [
                   'Preocupación excesiva sobre el futuro',
@@ -42,7 +42,7 @@ export default function AnsiedadPage() {
                 ] 
               },
               { 
-                title: 'Síntomas Cognitivos', 
+                title: 'Síntomas cognitivos', 
                 image: '/images/educational/Sintomas-cognitivos.jpg',
                 items: [
                   'Dificultad para concentrarse o mantener el enfoque',
@@ -64,13 +64,14 @@ export default function AnsiedadPage() {
                 </div>
                 <div className="p-6">
                   <h3 className="font-black text-[#1E4D8C] mb-4 text-lg text-center">{categoria.title}</h3>
-                  <ul className="space-y-3">
-                    {categoria.items.map((item, j) => (
-                      <div key={j} className="bg-blue-50 rounded p-3 text-center">
-                        <p className="text-slate-700 text-sm font-medium">{item}</p>
+                  <div className="bg-blue-50 rounded-lg p-6">
+                    {categoria.items.map((item, i) => (
+                      <div key={i} className="flex items-start gap-3 py-2">
+                        <div className="w-1.5 h-1.5 bg-[#71A5D9] rounded-full mt-2.5 flex-shrink-0"></div>
+                        <p className="text-black text-base font-medium leading-relaxed">{item}</p>
                       </div>
                     ))}
-                  </ul>
+                  </div>
                 </div>
               </div>
             ))}
@@ -79,11 +80,11 @@ export default function AnsiedadPage() {
 
         {/* Estrategias */}
         <div className="mb-16">
-          <h2 className="text-3xl font-black text-[#1E4D8C] mb-8">Estrategias que Funcionan</h2>
+          <h2 className="text-3xl font-black text-[#1E4D8C] mb-8">Estrategias que funcionan</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {[
               { 
-                title: 'Técnicas Inmediatas para Crisis', 
+                title: 'Técnicas inmediatas para crisis', 
                 image: '/images/educational/Tecnicas-Inmediatas.png',
                 items: [
                   'Respiración 4-7-8: Inhala 4, retiene 7, exhala 8 segundos',
@@ -93,7 +94,7 @@ export default function AnsiedadPage() {
                 ] 
               },
               { 
-                title: 'Hábitos Cotidianos Preventivos', 
+                title: 'Hábitos cotidianos preventivos', 
                 image: '/images/educational/Habitos-cotidianos.png',
                 items: [
                   'Mantén una rutina consistente día a día',
@@ -114,11 +115,12 @@ export default function AnsiedadPage() {
                   />
                 </div>
                 <div className="p-6">
-                  <h3 className="font-black text-[#1E4D8C] mb-6 text-xl text-center">{area.title}</h3>
-                  <div className="space-y-4">
-                    {area.items.map((item, j) => (
-                      <div key={j} className="bg-blue-50 rounded-lg p-4 border border-[#71A5D9]">
-                        <p className="text-slate-700 text-sm font-medium">{item}</p>
+                    <h3 className="font-black text-[#1E4D8C] mb-6 text-2xl text-center">{area.title}</h3>
+                  <div className="bg-blue-50 rounded-lg p-6">
+                    {area.items.map((item, i) => (
+                      <div key={i} className="flex items-start gap-3 py-2">
+                        <div className="w-1.5 h-1.5 bg-[#71A5D9] rounded-full mt-2.5 flex-shrink-0"></div>
+                        <p className="text-black text-base font-medium leading-relaxed">{item}</p>
                       </div>
                     ))}
                   </div>
@@ -128,43 +130,27 @@ export default function AnsiedadPage() {
           </div>
         </div>
 
-        {/* Cuándo buscar ayuda */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-black text-[#1E4D8C] mb-8">Cuándo Buscar Ayuda Profesional</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              'Los síntomas persisten más de 2 semanas sin mejoría',
-              'Limitan tu desempeño académico, laboral o relaciones personales',
-              'Experimentas pensamientos de autolesión o ataques de pánico frecuentes'
-            ].map((item, i) => (
-              <div key={i} className="bg-white rounded-lg p-6 border-2 border-[#71A5D9] text-center">
-                <p className="text-slate-700 text-sm font-medium">{item}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Consejos Adicionales */}
         <div className="mb-16">
-          <h2 className="text-3xl font-black text-[#1E4D8C] mb-8">Consejos Adicionales para Manejar la Ansiedad</h2>
+          <h2 className="text-3xl font-black text-[#1E4D8C] mb-8">Consejos adicionales para manejar la ansiedad</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { 
-                title: 'Actividades de Relajación', 
+                title: 'Actividades de relajación', 
                 desc: 'Participa en actividades que disfrutes: meditación, yoga, música, deportes o tiempo en espacios verdes del campus. Tu bienestar mental es fundamental' 
               },
               { 
-                title: 'Comunidad Estudiantil', 
+                title: 'Comunidad estudiantil', 
                 desc: 'Conecta con otros estudiantes de ESPE a través de grupos de estudio, clubes y actividades extracurriculares. El apoyo de tus pares es invaluable' 
               },
               { 
-                title: 'Equilibrio Académico', 
+                title: 'Equilibrio académico', 
                 desc: 'Organiza tu tiempo de estudio, establece límites saludables y no dudes en buscar apoyo académico cuando lo necesites. Tu éxito va más allá de las calificaciones' 
               }
             ].map((consejo, i) => (
               <div key={i} className="bg-white rounded-lg p-6 border-2 border-[#71A5D9]">
                 <h3 className="font-black text-[#1E4D8C] mb-3 text-lg text-center">{consejo.title}</h3>
-                <p className="text-slate-700 text-sm leading-relaxed text-center">{consejo.desc}</p>
+                <p className="text-black text-base leading-relaxed text-center">{consejo.desc}</p>
               </div>
             ))}
           </div>
@@ -173,10 +159,10 @@ export default function AnsiedadPage() {
         {/* Footer */}
         <div className="text-center">
           <button
-            onClick={() => router.push('/')}
+            onClick={() => router.push('/#info')}
             className="inline-flex items-center gap-2 px-6 py-3 bg-[#71A5D9] text-white font-bold rounded-lg hover:bg-[#1E4D8C] transition shadow-lg"
           >
-            Volver al Inicio
+            Volver a Infórmate
             <ArrowRight size={20} />
           </button>
         </div>

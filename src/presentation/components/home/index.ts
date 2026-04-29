@@ -6,3 +6,5 @@ export { InformateSection } from './InformateSection';
 export { RecursosSection } from './RecursosSection';
 export { InfoCard } from './InfoCard';
 export { Footer } from './Footer';
+export { TableOfContents } from './TableOfContents';
+export { NavigationSidebar } from './NavigationSidebar';

@@ -2,8 +2,8 @@ import Image from 'next/image';
 
 export function HeroSection() {
   return (
-    <section id="inicio" className="max-w-7xl mx-auto px-6 py-12 md:py-20">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+    <section id="inicio" className="max-w-7xl mx-auto px-6 py-8 md:py-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
         {/* Text Content */}
         <div>
           <h1 className="text-5xl md:text-6xl font-black text-[#1E4D8C] mb-6 leading-tight">
@@ -20,7 +20,7 @@ export function HeroSection() {
               href="#recursos"
               className="text-center px-8 py-4 bg-[#71A5D9] text-white font-bold text-lg rounded-xl hover:bg-[#1E4D8C] shadow-xl transition transform hover:scale-105"
             >
-              Explorar Recursos
+              Explorar recursos
             </a>
             <a
               href="#info"
@@ -32,7 +32,7 @@ export function HeroSection() {
         </div>
 
         {/* Image */}
-        <div className="relative h-80 md:h-96 rounded-2xl overflow-hidden shadow-2xl border-4 border-[#71A5D9]">
+        <div className="relative h-64 md:h-[22rem] rounded-2xl overflow-hidden shadow-2xl border-4 border-[#71A5D9]">
           <Image 
             src="/images/home-ansiedad.png" 
             alt="Bienestar" 

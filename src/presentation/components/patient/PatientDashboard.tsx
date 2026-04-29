@@ -35,7 +35,7 @@ export function PatientDashboard() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {['ANSIEDAD', 'DEPRESIÓN', 'ANÁLISIS PERSONAL'].map((item) => (
+          {['Ansiedad', 'Depresión', 'Análisis personal'].map((item) => (
             <div 
               key={item} 
               className="bg-[#B3D8F5] border-2 border-black p-6 rounded-lg text-center space-y-4 hover:bg-[#9fd0f0] transition-all"
@@ -60,9 +60,9 @@ export function PatientDashboard() {
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
-            { title: 'Guías de Autoayuda', btn: 'Ver guías' },
-            { title: 'Videos Educativos', btn: 'Ver Videos' },
-            { title: 'Técnicas de Rápida Estabilización', btn: 'Ver Técnicas' }
+            { title: 'Guías de autoayuda', btn: 'Ver guías' },
+            { title: 'Videos educativos', btn: 'Ver videos' },
+            { title: 'Técnicas de rápida estabilización', btn: 'Ver técnicas' }
           ].map((item) => (
             <div 
               key={item.title} 

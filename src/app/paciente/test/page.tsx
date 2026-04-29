@@ -24,7 +24,7 @@ export default function PacienteTestPage() {
   }
 
   const handleHomeClick = () => {
-    router.push('/dashboard/paciente');
+    router.push('/dashboard/paciente#info');
   };
 
   return (
