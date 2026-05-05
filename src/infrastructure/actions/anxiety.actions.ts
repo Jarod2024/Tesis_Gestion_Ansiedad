@@ -6,7 +6,7 @@ import { PgPatientRepository } from "../repositories/PgPatientRepository";
 
 const patientRepo = new PgPatientRepository();
 
-export async function saveGAD7ResultAction(score: number, interpretation: string) {
+export async function saveGAD7ResultAction(score: number, interpretation: string, responses: number[]) {
   const session = await getServerSession(authOptions);
 
   // Solo procedemos si hay sesión y el rol es PACIENTE
@@ -31,7 +31,9 @@ export async function saveGAD7ResultAction(score: number, interpretation: string
     await patientRepo.saveGad7Response(
       patientId,
       score,
-      interpretation
+      interpretation,
+      responses
+      
     );
 
     return { success: true };

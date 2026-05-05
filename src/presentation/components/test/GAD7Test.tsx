@@ -62,7 +62,10 @@ export function GAD7Test({ onHomeClick }: { onHomeClick: () => void }) {
 
     if (status === "authenticated" && session?.user?.role === "PACIENTE") {
       setIsSaving(true);
-      await saveGAD7ResultAction(score, data.label);
+      
+      // --- CAMBIO AQUÍ: Ahora enviamos 'responses' como tercer argumento ---
+      await saveGAD7ResultAction(score, data.label, responses); 
+      
       setIsSaving(false);
     }
   };

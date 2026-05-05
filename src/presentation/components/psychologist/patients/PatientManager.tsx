@@ -1,8 +1,21 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Search, User, Calendar, FileText, ClipboardList, LucideIcon } from 'lucide-react';
+import { Search, User, Calendar, FileText, ClipboardList, LucideIcon, X } from 'lucide-react';
 import { PatientListItemDTO } from "@/domain/dtos/patient-management.dto";
 import { getDetailedPatientDataAction } from "@/infrastructure/actions/psicologo.patient.actions";
+
+// --- CONSTANTES DEL TEST (Fuera para no recrearlas) ---
+const GAD7_QUESTIONS = [
+  "Se ha sentido nervioso(a), ansioso(a) o con los nervios de punta",
+  "No ha sido capaz de parar o controlar su preocupación",
+  "Se ha preocupado demasiado por diferentes cosas",
+  "Ha tenido dificultad para relajarse",
+  "Se ha sentido tan inquieto(a) que no ha podido quedarse quieto(a)",
+  "Se ha sentido irritable o se ha enfadado fácilmente",
+  "Ha sentido temor, como si algo terrible pudiera suceder"
+];
+
+const GAD7_LABELS = ["Nunca", "Varios días", "Más de la mitad de los días", "Casi todos los días"];
 
 // --- INTERFACES DE DATOS ---
 interface Appointment {
@@ -24,6 +37,7 @@ interface TestResult {
   puntaje: number;
   interpretation: string;
   fecha: string;
+  responses?: number[]; // Arreglo de números (0-3) guardados en BD
 }
 
 interface PatientDetails {
@@ -44,6 +58,9 @@ export function PatientManager({ patients }: Props) {
   
   const [details, setDetails] = useState<PatientDetails | null>(null);
   const [loading, setLoading] = useState(false);
+  
+  // Estado para el Modal de respuestas (Tipado correctamente, no any)
+  const [selectedTestDetails, setSelectedTestDetails] = useState<TestResult | null>(null);
 
   const selectedPatient = patients.find(p => p.id === selectedId);
   
@@ -59,7 +76,8 @@ export function PatientManager({ patients }: Props) {
       const res = await getDetailedPatientDataAction(selectedId);
       
       if (res.success && res.data) {
-        setDetails(res.data);
+        // Casteamos el resultado a nuestra interfaz PatientDetails
+        setDetails(res.data as PatientDetails);
       } else {
         setDetails(null);
       }
@@ -71,7 +89,7 @@ export function PatientManager({ patients }: Props) {
 
   return (
     <div className="space-y-6">
-      {/* Buscador Mejorado */}
+      {/* Buscador */}
       <div className="bg-[#EEF2FF] p-4 rounded-xl border border-blue-100 flex gap-3 shadow-sm">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-3 text-blue-500" size={20} />
@@ -200,23 +218,35 @@ export function PatientManager({ patients }: Props) {
                           <div className="space-y-4">
                             {details?.testResults && details.testResults.length > 0 ? (
                               details.testResults.map((test, index) => (
-                                <div key={index} className="bg-white border border-gray-200 p-5 rounded-xl shadow-sm hover:border-blue-400 transition-colors">
-                                  <div className="flex justify-between items-start mb-4">
-                                    <h4 className="font-black text-[#1E4D8C] uppercase text-sm">GAD-7: Ansiedad Generalizada</h4>
-                                    <span className="text-sm text-gray-500 font-medium bg-gray-50 px-2 py-1 rounded">
-                                      {test.fecha ? new Date(test.fecha).toLocaleDateString() : 'Fecha no disponible'}
-                                    </span>
-                                  </div>
-                                  <div className="flex flex-wrap gap-3 items-center">
-                                    <div className="bg-slate-100 px-4 py-1.5 rounded-full border border-slate-200">
-                                      <span className="text-xs font-bold text-slate-700">Puntaje: {test.puntaje}/21</span>
+                                <div key={index} className="bg-white border border-gray-200 p-5 rounded-xl shadow-sm hover:border-blue-400 transition-colors flex justify-between items-center">
+                                  <div className="space-y-3">
+                                    <div className="flex items-center gap-3">
+                                      <h4 className="font-black text-[#1E4D8C] uppercase text-sm">{test.test}</h4>
+                                      <span className="text-xs text-gray-400 font-medium">
+                                        {test.fecha ? new Date(test.fecha).toLocaleDateString() : 'Fecha no disponible'}
+                                      </span>
                                     </div>
-                                    <div className={`px-4 py-1.5 rounded-full text-white text-xs font-black uppercase shadow-sm ${
-                                      test.puntaje >= 15 ? 'bg-red-500' : test.puntaje >= 10 ? 'bg-orange-500' : 'bg-green-500'
-                                    }`}>
-                                      {test.interpretation}
+                                    <div className="flex flex-wrap gap-3 items-center">
+                                      <div className="bg-slate-100 px-4 py-1.5 rounded-full border border-slate-200">
+                                        <span className="text-xs font-bold text-slate-700">Puntaje: {test.puntaje}/21</span>
+                                      </div>
+                                      <div className={`px-4 py-1.5 rounded-full text-white text-xs font-black uppercase shadow-sm ${
+                                        test.puntaje >= 15 ? 'bg-red-500' : test.puntaje >= 10 ? 'bg-orange-500' : 'bg-green-500'
+                                      }`}>
+                                        {test.interpretation}
+                                      </div>
                                     </div>
                                   </div>
+
+                                  {/* BOTÓN VER RESPUESTAS (Aparece solo si hay respuestas guardadas) */}
+                                  {test.responses && (
+                                    <button 
+                                      onClick={() => setSelectedTestDetails(test)}
+                                      className="text-[11px] font-black text-blue-600 hover:bg-blue-50 px-4 py-2.5 rounded-xl border-2 border-blue-100 transition-all uppercase tracking-tight"
+                                    >
+                                      Ver Respuestas
+                                    </button>
+                                  )}
                                 </div>
                               ))
                             ) : (
@@ -247,11 +277,63 @@ export function PatientManager({ patients }: Props) {
           </div>
         </div>
       </div>
+
+      {/* --- MODAL DE RESPUESTAS --- */}
+      {selectedTestDetails && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center z-[100] p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-hidden flex flex-col shadow-2xl border border-slate-200">
+            {/* Header Modal */}
+            <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50">
+              <div>
+                <h3 className="font-black text-slate-800 uppercase text-sm tracking-tight">Detalle de Respuestas</h3>
+                <p className="text-xs text-slate-500 font-medium mt-0.5">Test: {selectedTestDetails.test}</p>
+              </div>
+              <button 
+                onClick={() => setSelectedTestDetails(null)} 
+                className="p-2 hover:bg-slate-200 rounded-full transition-colors text-slate-400 hover:text-slate-600"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            {/* Cuerpo Modal */}
+            <div className="p-6 overflow-y-auto space-y-5">
+              {GAD7_QUESTIONS.map((pregunta, i) => (
+                <div key={i} className="bg-slate-50 border border-slate-100 rounded-2xl p-4">
+                  <div className="flex gap-4 items-start">
+                    <span className="bg-white w-7 h-7 rounded-lg border border-slate-200 flex items-center justify-center text-[11px] font-black text-blue-600 flex-shrink-0 shadow-sm">
+                      {i + 1}
+                    </span>
+                    <div className="space-y-2">
+                      <p className="text-[13px] text-slate-600 font-medium leading-relaxed">{pregunta}</p>
+                      <p className="text-xs font-black text-blue-700 uppercase tracking-wide">
+                        Respuesta: {selectedTestDetails.responses?.[i] !== undefined 
+                          ? GAD7_LABELS[selectedTestDetails.responses[i]] 
+                          : "No registrada"}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Footer Modal */}
+            <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end">
+              <button 
+                onClick={() => setSelectedTestDetails(null)}
+                className="bg-slate-800 text-white px-6 py-2.5 rounded-xl font-black uppercase text-[11px] hover:bg-slate-700 transition-colors shadow-lg shadow-slate-200"
+              >
+                Cerrar Detalle
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
 
-// --- SUB-COMPONENTE CON TIPADO ESTRICTO ---
+// --- SUB-COMPONENTE ---
 interface DetailStatProps {
   label: string;
   value: string | number;
