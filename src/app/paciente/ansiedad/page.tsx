@@ -3,9 +3,10 @@
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useState, useEffect } from 'react';
-import { AlertCircle, Shield, HelpCircle, Lightbulb, ArrowRight } from 'lucide-react';
+import { AlertCircle, Shield, HelpCircle, Lightbulb, ArrowRight, ArrowLeft } from 'lucide-react';
 import { PatientHeader } from '@/presentation/components/patient/PatientHeader';
 import Image from 'next/image';
+import { navigateAndScroll } from '@/presentation/utils/scrollWithOffset';
 
 export default function PacienteAnsiedadPage() {
   const [activeSection, setActiveSection] = useState('info');
@@ -34,6 +35,14 @@ export default function PacienteAnsiedadPage() {
       />
       <div className="py-16">
         <div className="max-w-7xl mx-auto px-6">
+          <div className="mb-6">
+            <button
+              onClick={() => navigateAndScroll(router, '/dashboard/paciente#info', 'info', 100)}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white text-[#1E4D8C] font-semibold rounded-lg shadow-sm border border-[#71A5D9] hover:bg-[#71A5D9] hover:text-white transition"
+            >
+              <ArrowLeft size={18} /> Volver a Infórmate
+            </button>
+          </div>
           {/* Header Centrado */}
           <div className="text-center mb-16">
             <h1 className="text-6xl font-black text-[#1E4D8C] mb-4">Ansiedad</h1>
@@ -180,16 +189,7 @@ export default function PacienteAnsiedadPage() {
             </div>
           </div>
 
-          {/* Footer */}
-          <div className="text-center">
-            <button
-            onClick={() => router.push('/dashboard/paciente#info')}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#71A5D9] text-white font-bold rounded-lg hover:bg-[#1E4D8C] transition shadow-lg"
-            >
-            Volver a Infórmate
-              <ArrowRight size={20} />
-            </button>
-          </div>
+          {/* Footer (Volver moved to top) */}
         </div>
       </div>
     </div>
