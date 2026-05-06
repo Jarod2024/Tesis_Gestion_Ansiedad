@@ -4,6 +4,8 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/navigation';
+// 1. IMPORTAMOS EL PANEL DE ACCESIBILIDAD AQUÍ
+import { AccessibilityPanel } from '@/presentation/components/accessibility/AccessibilityPanel';
 
 interface NavigationSidebarProps {
   isPatient?: boolean;
@@ -192,6 +194,8 @@ export function NavigationSidebar({ isPatient = false, lastVisited }: Navigation
           ))}
         </ul>
       </div>
+      {/* 2. LLAMAMOS AL PANEL DE ACCESIBILIDAD AL FINAL DE LA BARRA LATERAL */}
+      <AccessibilityPanel />
     </nav>
   );
 }
