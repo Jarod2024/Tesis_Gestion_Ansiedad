@@ -78,12 +78,6 @@ export function GAD7Test({ onHomeClick }: { onHomeClick: () => void }) {
 
   return (
     <div className="space-y-6 pt-12 max-w-4xl mx-auto">
-      <button
-        onClick={onHomeClick}
-        className="flex items-center gap-2 px-4 py-2 bg-white text-[#1E4D8C] font-bold rounded-lg hover:bg-[#71A5D9] transition shadow-md border-2 border-[#71A5D9]"
-      >
-        <ArrowLeft size={20} /> Volver al Inicio
-      </button>
 
       <div className="bg-white rounded-3xl border-4 border-[#71A5D9] p-8 shadow-2xl">
         {!result ? (

@@ -101,14 +101,7 @@ export function VideosEducativos({ onHomeClick }: { onHomeClick: () => void }) {
           onClose={() => setSelectedVideo(null)} 
         />
       )}
-      <div className="mt-16 pt-12 border-t-2 border-blue-200 text-center">
-        <button
-          onClick={onHomeClick}
-          className="py-3 px-8 bg-[#71A5D9] text-white font-bold rounded-lg hover:bg-[#1E4D8C] transition shadow-lg"
-        >
-          Volver al inicio
-        </button>
-      </div>
+      {/* Volver al inicio moved to page wrapper for consistent placement */}
     </div>
     
   );

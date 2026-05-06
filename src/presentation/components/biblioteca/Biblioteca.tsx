@@ -105,7 +105,7 @@ export function Biblioteca({ onHomeClick }: { onHomeClick: () => void }) {
   return (
     <div className="max-w-7xl mx-auto px-6 pt-6">
       <div className="text-center mb-12">
-        <h1 className="text-5xl font-black text-[#1E4D8C] mb-4">Biblioteca de guías de autoayuda</h1>
+        <h1 className="text-5xl font-black text-[#1E4D8C] mb-4">Biblioteca</h1>
         <p className="text-xl text-slate-700">Recursos prácticos y verificados para manejar ansiedad, depresión y mejorar tu salud mental.</p>
       </div>
 
@@ -135,14 +135,7 @@ export function Biblioteca({ onHomeClick }: { onHomeClick: () => void }) {
           ))}
         </div>
       </section>
-      <div className="mt-16 pt-12 border-t-2 border-blue-200 text-center">
-        <button
-          onClick={onHomeClick}
-          className="py-3 px-8 bg-[#71A5D9] text-white font-bold rounded-lg hover:bg-[#1E4D8C] transition shadow-lg"
-        >
-          Volver al inicio
-        </button>
-      </div>
+      {/* Volver al inicio moved to page wrapper for consistent placement */}
     </div>
   );
 }

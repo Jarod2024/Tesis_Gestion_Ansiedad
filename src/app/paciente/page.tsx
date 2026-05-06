@@ -55,7 +55,7 @@ export default function PacienteHomePage() {
         <main className="flex-1 overflow-y-auto ml-80">
           <div className="max-w-7xl mx-auto px-6 py-4 md:py-6">
             <div className="space-y-8 md:space-y-10">
-              <HeroSection />
+              <HeroSection variant="patient" />
               <VideoFeatureSection />
               <WelcomeBox />
               <InformateSection />
