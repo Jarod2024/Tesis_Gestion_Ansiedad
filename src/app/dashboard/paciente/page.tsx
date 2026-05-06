@@ -31,7 +31,7 @@ function DashboardContent() {
       <main className="flex-1 overflow-y-auto lg:ml-80">
         <div className="max-w-7xl mx-auto px-6 py-8">
           <div className="space-y-16">
-            <HeroSection />
+            <HeroSection variant="patient" />
             <VideoFeatureSection />
             <WelcomeBox />
             <PacienteInformateSection />
