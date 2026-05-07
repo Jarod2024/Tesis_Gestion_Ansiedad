@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Search, User, Calendar, FileText, ClipboardList, LucideIcon, X } from 'lucide-react';
 import { PatientListItemDTO } from "@/domain/dtos/patient-management.dto";
 import { getDetailedPatientDataAction } from "@/infrastructure/actions/psicologo.patient.actions";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 // --- CONSTANTES DEL TEST (Fuera para no recrearlas) ---
 const GAD7_QUESTIONS = [
@@ -87,6 +88,7 @@ export function PatientManager({ patients }: Props) {
     fetchData();
   }, [selectedId]);
 
+
   return (
     <div className="space-y-6">
       {/* Buscador */}
@@ -157,6 +159,61 @@ export function PatientManager({ patients }: Props) {
                     </div>
                   </div>
                 </div>
+                {/* --- NUEVO: GRÁFICO ESTADÍSTICO DE PROGRESO --- */}
+                {/* Preparamos los datos ordenándolos por fecha (del más antiguo al más reciente) */}
+                {!loading && details?.testResults && details.testResults.length > 0 && (
+                  <div className="mt-8 mb-8">
+                    <h3 className="text-sm font-black text-gray-800 uppercase tracking-tight mb-4 flex items-center gap-2">
+                      Progreso de Ansiedad (Historial)
+                    </h3>
+                    <div className="h-[250px] w-full bg-slate-50 p-4 rounded-2xl border border-slate-200 shadow-inner">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart 
+                          data={[...details.testResults]
+                            .sort((a, b) => new Date(a.fecha).getTime() - new Date(b.fecha).getTime())
+                            .map(test => ({
+                              fecha: new Date(test.fecha).toLocaleDateString([], { day: '2-digit', month: 'short' }),
+                              puntaje: test.puntaje,
+                              interpretacion: test.interpretation
+                            }))
+                          }
+                          margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                          <XAxis 
+                            dataKey="fecha" 
+                            stroke="#94a3b8" 
+                            fontSize={12} 
+                            tickMargin={10} 
+                            tickLine={false}
+                            axisLine={false}
+                          />
+                          <YAxis 
+                            stroke="#94a3b8" 
+                            fontSize={12} 
+                            domain={[0, 21]} 
+                            tickLine={false}
+                            axisLine={false}
+                          />
+                          <Tooltip 
+                            contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)', fontSize: '12px', fontWeight: 'bold' }}
+                            formatter={((value: number) => [`${value} pts`, "Puntaje"]) as any}
+                            labelStyle={{ color: '#64748b', marginBottom: '4px' }}
+                          />
+                          <Line 
+                            type="monotone" 
+                            dataKey="puntaje" 
+                            stroke="#2563eb" 
+                            strokeWidth={3}
+                            activeDot={{ r: 6, fill: "#2563eb", stroke: "#ffffff", strokeWidth: 2 }}
+                            dot={{ r: 4, fill: "#ffffff", stroke: "#2563eb", strokeWidth: 2 }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                )}
+                {/* --- FIN DEL GRÁFICO --- */}
 
                 {/* Navegación de Pestañas */}
                 <div className="mt-8">
