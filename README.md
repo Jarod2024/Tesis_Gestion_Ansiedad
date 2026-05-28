@@ -306,3 +306,13 @@ BEFORE UPDATE ON public.bienestar_asignaciones
 FOR EACH ROW
 EXECUTE FUNCTION fn_update_updated_at_bienestar();
 
+INSERT INTO users (name, email, password, role, contacto, status, especialidad) 
+VALUES (
+  'Administrador del Sistema', 
+  'admin@espe.edu.ec', 
+  '$2b$10$cFMN5PmKdwPP3KE4BDnOf.4/Z6ukopxLKuXba6nzKc/lfOE3orEWO', -- OJO: Aquí deberías poner la contraseña ya hasheada(12345678)
+  'ADMINISTRADOR', 
+  '0999999999', 
+  'Activo', 
+  'Gestión de Plataforma'
+);
