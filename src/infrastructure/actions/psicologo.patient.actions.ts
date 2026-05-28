@@ -7,19 +7,17 @@ export async function getPatientsForPsychologistAction(psychologistId: number): 
   // Use safe columns: some deployments may not have 'contacto' or 'last_login' columns
   const query = `
     SELECT
-      u.id,
-      u.name as nombre,
-      u.email,
-      -- if contacto/phone column does not exist, return empty string as telefono
-      '' as telefono,
-      -- last_login may not exist in all schemas; return NULL
-      NULL as last_login,
+      u.id, 
+      u.name as nombre, 
+      u.email, 
+      u.contacto as telefono,
+      u.last_login, -- <--- NUEVO CAMPO
       MAX(a.appointment_date) as ultima_cita
     FROM users u
     INNER JOIN appointments a ON u.id = a.patient_id
-    WHERE a.psychologist_id = $1
+    WHERE a.psychologist_id = $1 
     AND u.role = 'PACIENTE'
-    GROUP BY u.id, u.name, u.email
+    GROUP BY u.id, u.name, u.email, u.contacto, u.last_login
     ORDER BY nombre ASC;
   `;
 
