@@ -200,7 +200,6 @@ export const LoginForm = () => {
               )}
             </div>
 
-            
 
             {/* ERRORES DEL SERVIDOR */}
             {serverError && (
