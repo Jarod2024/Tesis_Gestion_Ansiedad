@@ -45,7 +45,6 @@ const registerSchema = z.object({
   password: z.string()
     .min(8, "La contraseña debe tener al menos 8 caracteres")
     .max(30, "La contraseña no puede exceder los 30 caracteres")
-    .regex(/^[a-zA-Z0-9]+$/, "No se permiten caracteres especiales (solo letras y números)")
     .regex(/[A-Z]/, "Debe incluir al menos una letra mayúscula")
     .regex(/[a-z]/, "Debe incluir al menos una letra minúscula")
     .regex(/[0-9]/, "Debe incluir al menos un número"),
@@ -104,7 +103,7 @@ export const RegisterForm = () => {
         <div className="w-full max-w-[600px] bg-[#D9E9FF] p-10 rounded-[45px] shadow-xl flex flex-col items-center border border-white/50">
           
           <div className="relative w-14 h-14 rounded-full overflow-hidden shadow-md border border-blue-200 mb-4">
-            <Image src="/images/logo-.png" alt="Logo" fill className="object-cover" sizes="56px" priority />
+            <Image src="/images/Logo.png" alt="Logo" fill className="object-cover" sizes="56px" priority />
           </div>
           
           <h1 className="text-2xl font-bold text-[#1E4D8C] mb-8 tracking-widest uppercase">Registro</h1>
@@ -199,12 +198,11 @@ export const RegisterForm = () => {
               <input
                 {...register("password", {
                   onChange: (e) => {
-                    const sanitized = e.target.value.replace(/[^a-zA-Z0-9]/g, "");
-                    setValue("password", sanitized, { shouldValidate: true });
+                    setValue("password", e.target.value, { shouldValidate: true });
                   }
                 })}
                 type={showPassword ? "text" : "password"} // <-- CAMBIO DINÁMICO
-                placeholder="Contraseña (Alfanumérica)"
+                placeholder="Mínimo 8 caracteres con letras, números y símbolos"
                 maxLength={30}
                 className={`w-full pl-12 pr-12 py-3.5 rounded-2xl border outline-none focus:ring-2 focus:ring-blue-400 text-gray-700 placeholder-gray-400 shadow-inner ${errors.password ? 'border-red-500 ring-1 ring-red-500' : 'border-gray-200'}`}
               />

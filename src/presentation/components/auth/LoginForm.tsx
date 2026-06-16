@@ -112,7 +112,7 @@ const onSubmit = async (data: LoginFormData) => {
           
           <div className="relative w-14 h-14 mb-4 bg-white rounded-full flex items-center justify-center shadow-sm border border-blue-100">
             <Image
-              src="/images/Logo-.png"
+              src="/images/Logo.png"
               alt="Logo"
               width={32}
               height={32}
@@ -158,9 +158,7 @@ const onSubmit = async (data: LoginFormData) => {
                 {...register("password", {
                   onChange: (e) => {
                     clearErrorsOnType();
-                    // Evita espacios y caracteres especiales de inyección
-                    const sanitized = e.target.value.replace(/[^a-zA-Z0-9]/g, "");
-                    setValue("password", sanitized, { shouldValidate: true });
+                    setValue("password", e.target.value, { shouldValidate: true });
                   }
                 })}
                 type={showPassword ? "text" : "password"}
