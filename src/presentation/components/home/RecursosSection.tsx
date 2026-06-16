@@ -2,6 +2,10 @@ import { BookOpen, Play, Zap } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { InfoCard } from './InfoCard';
 
+type RecursosSectionProps = {
+  transparent?: boolean;
+};
+
 const RESOURCE_CARDS = [
   {
     icon: <BookOpen size={56} />,
@@ -23,11 +27,14 @@ const RESOURCE_CARDS = [
   },
 ];
 
-export function RecursosSection() {
+export function RecursosSection({ transparent = false }: RecursosSectionProps) {
   const router = useRouter();
 
   return (
-    <section id="recursos" className="bg-gradient-to-r from-[#dfe9f8] to-[#e8f1ff] py-10 md:py-12">
+    <section
+      id="recursos"
+      className={transparent ? 'py-10 md:py-12' : 'bg-gradient-to-r from-[#dfe9f8] to-[#e8f1ff] py-10 md:py-12'}
+    >
       <div className="max-w-7xl mx-auto px-6">
         <div className="mb-6 md:mb-8">
           <h2 className="text-4xl md:text-5xl font-black text-[#1E4D8C] mb-2">Recursos</h2>
